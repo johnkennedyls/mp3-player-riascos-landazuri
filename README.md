@@ -13,5 +13,5 @@ This program was made by Jonh Kennedy and Julián Riascos, actual students of th
 ## A way to contact us
 Our emails:
 
-- John Kennedy: 
+- John Kennedy: jkls1998@gmail.com
 - Julián Riascos: riascosjulian5@gmail.com
