@@ -7,6 +7,7 @@ This project is a player multimedia, accepts mp4, wav and mp3 formats existing i
 This program was made with Java, programmed in Windows 10 and the IDE used was Eclipse for Java developers. 
 
 ## Take a look
+Click here for the information of the deliveries
 [Documentation](https://drive.google.com/drive/folders/1V3aesmCJL6l0oIYG_yCXA0SabB1fLeJW?usp=sharing)
 
 ## More of us
