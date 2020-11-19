@@ -8,6 +8,7 @@ This program was made with Java, programmed in Windows 10 and the IDE used was E
 
 ## Take a look
 Click here for the information of the deliveries
+
 [Documentation](https://drive.google.com/drive/folders/1V3aesmCJL6l0oIYG_yCXA0SabB1fLeJW?usp=sharing)
 
 ## More of us
