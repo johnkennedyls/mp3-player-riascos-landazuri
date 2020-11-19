@@ -7,9 +7,7 @@ This project is a player multimedia, accepts mp4, wav and mp3 formats existing i
 This program was made with Java, programmed in Windows 10 and the IDE used was Eclipse for Java developers. 
 
 ## Take a look
-Click here for the information of the deliveries
-
-[Documentation](https://drive.google.com/drive/folders/1V3aesmCJL6l0oIYG_yCXA0SabB1fLeJW?usp=sharing)
+Click [here](https://drive.google.com/drive/folders/1V3aesmCJL6l0oIYG_yCXA0SabB1fLeJW?usp=sharing) for the information of the deliveries
 
 ## More of us
 This program was made by Jonh Kennedy and Julián Riascos, actual students of the ICESI university in Cali, Colombia. 
