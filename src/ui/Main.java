@@ -14,21 +14,18 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	public static void main(String[] args) throws FileNotFoundException{
-		
+
 		ConnectionDB con = new ConnectionDB();
-		
+
 		@SuppressWarnings("unused")
 		Connection conect = (Connection) con.getConnection();	
-		
+
 		launch(args);
-			
+
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		@SuppressWarnings("unused")
-		Register r = new Register();
-		
+	public void start(Stage primaryStage) throws Exception {		
 		Parent root = FXMLLoader.load(getClass().getResource("registerView.fxml"));
 
 		Scene scene = new Scene(root);

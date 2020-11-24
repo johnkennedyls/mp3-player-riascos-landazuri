@@ -10,9 +10,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
+import model.Manager;
 
 public class GUI_MP3 {
 
+	private Manager manager;
+	
+	public GUI_MP3(Manager m) {
+		manager = m;
+	}
 	boolean isPlaying = false;
 	
 	@FXML
