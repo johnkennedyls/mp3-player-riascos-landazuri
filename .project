@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
+	<name>ti3 login and sign in</name>
+=======
 	<name>mp3-player</name>
+>>>>>>> dfe1cae77f891179480969083d68ba05d1c79aa3
 	<comment></comment>
 	<projects>
 	</projects>
