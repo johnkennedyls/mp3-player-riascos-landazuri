@@ -30,9 +30,12 @@ import model.Song;
 public class GUI_MP3 {
 
 	private Manager manager;
+	
+	private MP4Controller guiMP4;
 
 	public GUI_MP3(Manager m) {
 		manager = m;
+		guiMP4 = new MP4Controller();
 	}
 	boolean isPlaying = false;
 
@@ -216,5 +219,15 @@ public class GUI_MP3 {
 		}
 		initializeTableView();
 	}
+	
+	   @FXML
+	    void goMP4(ActionEvent event) throws IOException {
+		   FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mp4.fxml"));
+
+			
+
+			mainPane.getChildren().clear();
+			mainPane.setCenter(fxmlLoader.load());
+	    }
 
 }
