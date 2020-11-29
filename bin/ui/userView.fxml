@@ -17,13 +17,13 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <TableView fx:id="playlist" prefHeight="111.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tvPlaylist" onMouseClicked="#showSongs" prefHeight="111.0" prefWidth="600.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn prefWidth="25.600006878376007" text="#" />
-          <TableColumn prefWidth="231.1999626159668" text="Song" />
-            <TableColumn prefWidth="136.800048828125" text="Artist" />
-            <TableColumn minWidth="0.0" prefWidth="147.20001220703125" text="Album" />
-            <TableColumn prefWidth="58.40008544921875" text="Duration" />
+          <TableColumn fx:id="tcNumber" prefWidth="25.600006878376007" text="#" />
+          <TableColumn fx:id="tcTitle" prefWidth="231.1999626159668" text="Song" />
+            <TableColumn fx:id="tcArtist" prefWidth="136.800048828125" text="Artist" />
+            <TableColumn fx:id="tcAlbum" minWidth="0.0" prefWidth="147.20001220703125" text="Album" />
+            <TableColumn fx:id="tcDuration" prefWidth="58.40008544921875" text="Duration" />
         </columns>
       </TableView>
    </center>

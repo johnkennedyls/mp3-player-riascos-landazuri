@@ -2,7 +2,6 @@ package ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -65,26 +64,11 @@ public class GUI_MP3 {
 	}
 
 	private void initializeTableView() {
-		ArrayList<Song> playlist = playlist();
-		if (!playlist.isEmpty()) {
-			ObservableList<Song> observableList;
-			observableList = FXCollections.observableArrayList(playlist);
-
-			tvPlaylist.setItems(observableList);
-			tcTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title")); 
-			tcArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
-			tcAlbum.setCellValueFactory(new PropertyValueFactory<Song,String>("album"));
-		}
-	}
-
-	private ArrayList<Song> playlist(){
-		ArrayList<Song> playlist = new ArrayList<>();
-		Song song = manager.getPlaylist().getFirstSong();
-		while (song != null) {
-			playlist.add(song);
-			song = song.getNextSong();
-		}
-		return playlist;
+		ObservableList<Song> observableList = FXCollections.observableArrayList(manager.getPlaylist().getPlaylist());
+		tvPlaylist.setItems(observableList);
+		tcTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title")); 
+		tcArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
+		tcAlbum.setCellValueFactory(new PropertyValueFactory<Song,String>("album"));
 	}
 
 	@FXML
@@ -140,9 +124,8 @@ public class GUI_MP3 {
 	}
 
 	@FXML
-	public void showStudents(MouseEvent event) {
-		System.out.println("Hola"); 
-		System.out.println(tvPlaylist.getSelectionModel().getSelectedItem());
+	public void showSongs(MouseEvent event) {
+		mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
 	}
 
 	@FXML
