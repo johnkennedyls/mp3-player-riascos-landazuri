@@ -25,6 +25,7 @@ public class Playlist {
 				current = current.getNextSong();
 			}
 			current.setNextSong(newSong);
+			newSong.setPrevSong(current);
 		}
 	}
 	
@@ -68,6 +69,10 @@ public class Playlist {
 
 	public Song getFirstSong() {
 		return firstSong;
+	}
+	
+	public Song getCurrent() {
+		return firstSong.getNextSong();
 	}
 	
 }

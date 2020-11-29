@@ -20,7 +20,7 @@ public class Song {
 	private String artist;
 	private String album;
 	private String title;
-	private String track;
+	private boolean reproducing;
 	private Song nextSong;
 	private Song prevSong;
 	
@@ -31,20 +31,9 @@ public class Song {
 		artist = tag.getFirst(FieldKey.ARTIST);
 		album = tag.getFirst(FieldKey.ALBUM);
 		title = tag.getFirst(FieldKey.TITLE);
-		track = tag.getFirst(FieldKey.TRACK);
+		reproducing = false;
 	}
 	
-//	public Song(Media m) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-//		media = m;
-//		File fi = new File();
-//		AudioFile f = AudioFileIO.read(m);
-//		Tag tag = f.getTag();
-//		artist = tag.getFirst(FieldKey.ARTIST);
-//		album = tag.getFirst(FieldKey.ALBUM);
-//		title = tag.getFirst(FieldKey.TITLE);
-//		track = tag.getFirst(FieldKey.TRACK);
-//	}
-
 	public Media getMedia() {
 		return media;
 	}
@@ -93,12 +82,12 @@ public class Song {
 		this.title = title;
 	}
 
-	public String getTrack() {
-		return track;
+	public boolean isReproducing() {
+		return reproducing;
 	}
 
-	public void setTrack(String track) {
-		this.track = track;
+	public void setReproducing(boolean reproducing) {
+		this.reproducing = reproducing;
 	}
 	
 }
