@@ -10,8 +10,8 @@ public class UserManager {
 			users = new ArrayList<>();
 		}
 		
-		public void addUser(String na, String em, String sex, String pass) {
-			users.add(new User(na,em,sex,pass));
+		public void addUser(String na, String em, String pass) {
+			users.add(new User(na,em,pass));
 		}
 
 		public List<User> getUsers() {

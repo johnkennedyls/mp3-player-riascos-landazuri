@@ -3,13 +3,21 @@ package model;
 public class Manager {
 
 	private Register r;
+	private Playlist p;
 	
 	public Manager() {
 		r = new Register();
+		p = new Playlist();
 	}
+	
+	
 
-	public String createRegister(String id, String name, String email, String password) {
-		return r.createRegister(id, name, email, password);
+	public Register getRegister() {
+		return r;
+	}
+	
+	public Playlist getPlaylist() {
+		return p;
 	}
 	
 }

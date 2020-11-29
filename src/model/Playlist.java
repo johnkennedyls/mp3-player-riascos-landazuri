@@ -33,7 +33,7 @@ public class Playlist {
 		
 		Song current = firstSong;
 		while(current!=null && b==null) {
-			if(c.equals(current.getTitle())) {
+			if(c.equalsIgnoreCase(current.getTitle())) {
 				b = current;
 			}
 			current = current.getNextSong();
@@ -46,7 +46,7 @@ public class Playlist {
 		Song b = null;
 		
 		if(firstSong!=null) {
-			if(c.equals(firstSong.getTitle())) {
+			if(c.equalsIgnoreCase(firstSong.getTitle())) {
 				b = firstSong;
 				firstSong = firstSong.getNextSong();
 			}else {
@@ -65,4 +65,9 @@ public class Playlist {
 		
 		return b;
 	}
+
+	public Song getFirstSong() {
+		return firstSong;
+	}
+	
 }

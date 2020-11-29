@@ -23,9 +23,9 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException{
-		ConnectionDB con = new ConnectionDB();	
-		@SuppressWarnings("unused")
-		Connection conect = (Connection) con.getConnection();	
+//		ConnectionDB con = new ConnectionDB();	
+//		@SuppressWarnings("unused")
+//		Connection conect = (Connection) con.getConnection();	
 		launch(args);		
 	}
 
@@ -36,9 +36,10 @@ public class Main extends Application {
 		fxmlLoader.setController(guiMp3);
 		
 		Parent root = fxmlLoader.load();
+		
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("MY WAY test");
+		primaryStage.setTitle("Contact Manager");
 		primaryStage.show();
 	}
 

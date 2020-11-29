@@ -33,6 +33,17 @@ public class Song {
 		title = tag.getFirst(FieldKey.TITLE);
 		track = tag.getFirst(FieldKey.TRACK);
 	}
+	
+//	public Song(Media m) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+//		media = m;
+//		File fi = new File();
+//		AudioFile f = AudioFileIO.read(m);
+//		Tag tag = f.getTag();
+//		artist = tag.getFirst(FieldKey.ARTIST);
+//		album = tag.getFirst(FieldKey.ALBUM);
+//		title = tag.getFirst(FieldKey.TITLE);
+//		track = tag.getFirst(FieldKey.TRACK);
+//	}
 
 	public Media getMedia() {
 		return media;

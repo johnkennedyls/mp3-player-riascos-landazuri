@@ -3,13 +3,11 @@ package model;
 public class User {
 	private String name;
 	private String email;
-	private String sex;
 	private String passWord;
 	
-	public User(String na, String em, String sex, String pass) {
+	public User(String na, String em, String pass) {
 		name = na;
 		email = em;
-		this.sex = sex;
 		passWord = pass;
 	}
 
@@ -19,10 +17,6 @@ public class User {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public String getSex() {
-		return sex;
 	}
 
 	public String getPassWord() {
