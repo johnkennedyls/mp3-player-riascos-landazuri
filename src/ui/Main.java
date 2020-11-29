@@ -16,10 +16,12 @@ public class Main extends Application {
 
 	private GUI_MP3 guiMp3;
 	private Manager manager;
+	private MP4Controller guiMP4;
 	
 	public Main() {
 		manager = new Manager();
 		guiMp3 = new GUI_MP3(manager);
+		guiMP4 = new MP4Controller();
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException{
