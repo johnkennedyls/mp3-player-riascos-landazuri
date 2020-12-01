@@ -3,19 +3,19 @@ package model;
 public class Manager {
 
 	private Register r;
-	private Playlist p;
+	private PlaylistManager p;
 	private Song songPlaying;
 	
 	public Manager() {
 		r = new Register();
-		p = new Playlist();
+		p = new PlaylistManager();
 	}
 
 	public Register getRegister() {
 		return r;
 	}
 	
-	public Playlist getPlaylist() {
+	public PlaylistManager getPlaylistManager() {
 		return p;
 	}
 	

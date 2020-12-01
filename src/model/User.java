@@ -1,14 +1,17 @@
 package model;
 
 public class User {
+	
 	private String name;
 	private String email;
 	private String passWord;
+	private int id;
 	
-	public User(String na, String em, String pass) {
+	public User(String na, String em, String pass, int ide) {
 		name = na;
 		email = em;
 		passWord = pass;
+		id = ide;
 	}
 
 	public String getName() {
@@ -23,6 +26,7 @@ public class User {
 		return passWord;
 	}
 	
-	
-	
+	public int getId() {
+		return id;
+	}
 }

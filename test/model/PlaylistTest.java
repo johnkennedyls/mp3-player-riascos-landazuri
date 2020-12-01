@@ -14,7 +14,7 @@ class PlaylistTest {
 	private Playlist p;
 
 	public void setupScenary1() {
-		p = new Playlist();
+		p = new Playlist("Test");
 	}
 
 	@Test

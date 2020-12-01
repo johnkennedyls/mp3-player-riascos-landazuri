@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MenuBar>
         <menus>
@@ -30,15 +30,15 @@
       </MenuBar>
       <BorderPane fx:id="mainPane" prefHeight="574.0" prefWidth="600.0">
          <center>
-            <Pane prefHeight="200.0" prefWidth="511.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="394.0" prefWidth="626.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label alignment="CENTER" layoutX="148.0" layoutY="45.0" prefHeight="55.0" prefWidth="303.0" text="Welcome to My Way!">
+                  <Label alignment="CENTER" layoutX="197.0" layoutY="47.0" prefHeight="55.0" prefWidth="303.0" text="Welcome to My Way!">
                      <font>
                         <Font name="Century" size="30.0" />
                      </font>
                   </Label>
-                  <Button layoutX="239.0" layoutY="227.0" mnemonicParsing="false" onAction="#logIn" prefHeight="37.0" prefWidth="109.0" text="Log in" />
-                  <Button layoutX="239.0" layoutY="150.0" mnemonicParsing="false" onAction="#signUp" prefHeight="37.0" prefWidth="109.0" text="Sign up" />
+                  <Button layoutX="294.0" layoutY="243.0" mnemonicParsing="false" onAction="#logIn" prefHeight="37.0" prefWidth="109.0" text="Log in" />
+                  <Button layoutX="294.0" layoutY="163.0" mnemonicParsing="false" onAction="#signUp" prefHeight="37.0" prefWidth="109.0" text="Sign up" />
                </children>
             </Pane>
          </center>

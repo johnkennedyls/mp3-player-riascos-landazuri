@@ -11,10 +11,14 @@ import org.jaudiotagger.tag.TagException;
 
 public class Playlist {
 
+	private int idPlaylist;
+	private String name;
+	private int idUser;
 	private Song firstSong;
 	private List<Song> playlist;
 
-	public Playlist() {	
+	public Playlist(String na) {
+		name = na;
 		playlist = new ArrayList<>();
 	}
 
@@ -91,6 +95,22 @@ public class Playlist {
 
 	public Song getCurrent() {
 		return firstSong.getNextSong();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public int getIdPlaylist() {
+		return idPlaylist;
+	}
+
+	public int getIdUser() {
+		return idUser;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

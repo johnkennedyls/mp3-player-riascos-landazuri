@@ -14,8 +14,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -24,17 +27,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
 import model.Manager;
+import model.Playlist;
 import model.Song;
 
 public class GUI_MP3 {
 
 	private Manager manager;
-	
-	private MP4Controller guiMP4;
 
-	public GUI_MP3(Manager m) {
+	public GUI_MP3(Manager m){
 		manager = m;
-		guiMP4 = new MP4Controller();
 	}
 	boolean isPlaying = false;
 
@@ -44,6 +45,18 @@ public class GUI_MP3 {
 	@FXML
 	private MediaPlayer mp;
 
+	@FXML
+	private TextField txtName;
+	
+	@FXML
+	private TextField txtEmail;
+	
+	@FXML
+	private TextField txtPassword;
+	
+	@FXML
+	private TextField txtId;
+	
 	@FXML
 	private TableView<Song> tvPlaylist;
 
@@ -67,7 +80,7 @@ public class GUI_MP3 {
 	}
 
 	private void initializeTableView() {
-		ObservableList<Song> observableList = FXCollections.observableArrayList(manager.getPlaylist().getPlaylist());
+		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylistManager().getPlaylists());
 		tvPlaylist.setItems(observableList);
 		tcTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title")); 
 		tcArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
@@ -98,6 +111,16 @@ public class GUI_MP3 {
 
 	@FXML
 	void signUpUser(ActionEvent event) throws IOException  {
+		
+		manager.getRegister().createRegister(txtName.getText(), txtEmail.getText(), txtPassword.getText(), Integer.parseInt(txtId.getText()));
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Register");
+	    alert.setHeaderText("Register process done");
+	    alert.setContentText("Account created!");
+	
+	    alert.showAndWait();
+	    
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("userView.fxml"));
 
 		fxmlLoader.setController(this);    	
@@ -128,6 +151,7 @@ public class GUI_MP3 {
 
 	@FXML
 	public void showSongs(MouseEvent event) {
+		manager.setSongPlaying(tvPlaylist.getSelectionModel().getSelectedItem());
 		mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
 	}
 
@@ -195,7 +219,7 @@ public class GUI_MP3 {
 		String path = f.getAbsolutePath();
 		path.replace("\\", "/");
 		try {
-			manager.getPlaylist().addSong(path);
+			manager.getPlaylistManager().getPlaylists().get(0).addSong(path);
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
@@ -206,8 +230,6 @@ public class GUI_MP3 {
 	   @FXML
 	    void goMP4(ActionEvent event) throws IOException {
 		   FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mp4.fxml"));
-
-			
 
 			mainPane.getChildren().clear();
 			mainPane.setCenter(fxmlLoader.load());
