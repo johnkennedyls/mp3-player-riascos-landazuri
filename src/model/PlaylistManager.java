@@ -8,8 +8,10 @@ public class PlaylistManager {
 	
 	public PlaylistManager() {	
 	}
-
 	
+	public void addPlaylist(String name) {
+		
+	}
 	
 	public List<Playlist> getPlaylists() {
 		return playlists;
