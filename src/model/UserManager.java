@@ -11,8 +11,30 @@ public class UserManager {
 		users = new ArrayList<>();
 	}
 
-	public void addUser(String na, String em, String pass, int id) {
-		users.add(new User(na, em, pass, id));
+	public String addUser(String na, String em, String pass, int id) {
+		String info = "";
+		if (uniqueUserId(id)) {
+			users.add(new User(na, em, pass, id));
+		}
+		else {
+			
+		}
+		return info;
+	}
+	
+	/**
+	 * This method check if the user ID isn't duplicate
+	 * @param id is the user ID number 
+	 * @return a boolean with the result of the search
+	 */
+	public boolean uniqueUserId(int id){
+		boolean unique = true;
+		for(int i=0; i<users.size() && unique; i++){
+			if(users.get(i).getId() == id){
+				unique = false;
+			}
+		}
+		return unique;
 	}
 
 	public boolean binarySearch(int id) {

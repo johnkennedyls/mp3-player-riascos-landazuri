@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="tvVideo" onMouseClicked="#openVideo" prefHeight="319.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <columns>
+      <TableColumn fx:id="tcNumberV" prefWidth="25.600006878376007" text="#" />
+      <TableColumn fx:id="tcTitleV" prefWidth="231.1999626159668" text="Title" />
+      <TableColumn fx:id="tcAuthor" prefWidth="191.20001220703125" text="Author" />
+      <TableColumn fx:id="tcWeight" minWidth="0.0" prefWidth="63.99993896484375" text="Weight" />
+      <TableColumn fx:id="tcDurationV" prefWidth="89.5999755859375" text="Duration" />
+   </columns>
+</TableView>
