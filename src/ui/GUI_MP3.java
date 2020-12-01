@@ -262,6 +262,11 @@ public class GUI_MP3 {
     void createNewPlaylist(ActionEvent event) {
 
     }
+    
+    @FXML
+    void openVideo(MouseEvent event) {
+
+    }
 	
 	@FXML
 	void goMP4(ActionEvent event) throws IOException {
