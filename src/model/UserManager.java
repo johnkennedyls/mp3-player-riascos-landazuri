@@ -15,9 +15,10 @@ public class UserManager {
 		String info = "";
 		if (uniqueUserId(id)) {
 			users.add(new User(na, em, pass, id));
+			info += "User added succesfully";
 		}
 		else {
-			
+			info += "The ID alredy exists";
 		}
 		return info;
 	}

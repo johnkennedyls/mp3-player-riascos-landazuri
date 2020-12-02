@@ -13,13 +13,22 @@ public class Playlist {
 
 	private int idPlaylist;
 	private String name;
+	private String content;
 	private int idUser;
 	private Song firstSong;
+	private Video firstVideo;
 	private List<Song> playlist;
+	private List<Video> playlistV;
 
 	public Playlist(String na) {
 		name = na;
 		playlist = new ArrayList<>();
+	}
+	
+	public Playlist(String na, String cont) {
+		name = na;
+		content = cont;
+		playlistV = new ArrayList<>();
 	}
 
 	public void addSong(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -37,8 +46,38 @@ public class Playlist {
 		}
 		playlist();
 	}
+	
+	public void addVideo(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		Video newVideo = new Video(path);
+
+		if(firstVideo == null) {
+			firstVideo = newVideo;
+		}else {
+			Video current = firstVideo;
+			while(current.getNextVideo()!=null) {
+				current = current.getNextVideo();
+			}
+			current.setNextVideo(newVideo);
+			newVideo.setPrevVideo(current);
+		}
+		playlist();
+	}
 
 	public Song searchSong(String c) {
+		Song b = null;
+
+		Song current = firstSong;
+		while(current!=null && b==null) {
+			if(c.equalsIgnoreCase(current.getTitle())) {
+				b = current;
+			}
+			current = current.getNextSong();
+		}
+
+		return b;
+	}
+	
+	public Song searchVideo(String c) {
 		Song b = null;
 
 		Song current = firstSong;
@@ -85,6 +124,15 @@ public class Playlist {
 		}
 	}
 	
+	public void playlistV(){
+		playlistV.clear();
+		Video video = firstVideo;
+		while (video != null) {
+			playlistV.add(video);
+			video = video.getNextVideo();
+		}
+	}
+	
 	public List<Song> getPlaylist() {
 		return playlist;
 	}
@@ -92,11 +140,15 @@ public class Playlist {
 	public Song getFirstSong() {
 		return firstSong;
 	}
-
-	public Song getCurrent() {
-		return firstSong.getNextSong();
-	}
 	
+	public String getContent() {
+		return content;
+	}
+
+	public List<Video> getPlaylistV() {
+		return playlistV;
+	}
+
 	public String getName() {
 		return name;
 	}

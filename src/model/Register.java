@@ -14,12 +14,12 @@ public class Register {
 		related = new UserManager();
 	}
 
-	public String createRegister(String name, String email, String password, int id) {
+	public String createRegister(String name, String email, String password, int id) throws SQLException {
 		String info = "";
+		String temp = "";
+		temp += related.addUser(name, email, password, id);
 
-		related.addUser(name, email, password, id);
-
-		try {
+		if (related.binarySearch(id)) {
 			ConnectionDB con = new ConnectionDB();
 			Connection conect = con.getConnection();
 			PreparedStatement ps = conect.prepareStatement("INSERT INTO "
@@ -32,10 +32,9 @@ public class Register {
 			ps.setString(4, password);
 			ps.executeUpdate();
 			info += "Register created!";
-
-		} catch (SQLException e) {
-			info += "Error in the creation of the register";
 		}
+		else
+			info += temp;
 		return info;
 	}
 

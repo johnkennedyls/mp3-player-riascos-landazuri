@@ -3,7 +3,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
-<TableView fx:id="tvPlaylist" onMouseClicked="#showSongs" prefHeight="319.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<TableView fx:id="tvPlaylist" onMouseClicked="#selectSongs" prefHeight="319.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <columns>
       <TableColumn fx:id="tcNumber" prefWidth="25.600006878376007" text="#" />
       <TableColumn fx:id="tcTitle" prefWidth="231.1999626159668" text="Song" />
