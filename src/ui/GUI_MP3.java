@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.MediaPlayer;
@@ -130,7 +131,7 @@ public class GUI_MP3 {
 	}
 
 	private void initializePlaylistsGroupView() {
-		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylistManager().getPlaylists());
+		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylists());
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
 	}
@@ -302,7 +303,35 @@ public class GUI_MP3 {
 		String path = f.getAbsolutePath();
 		path.replace("\\", "/");
 		try {
-			manager.getPlaylistManager().getPlaylists().get(0).addSong(path);
+			manager.getPlaylists().get(0).addSong(path);
+		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
+				| InvalidAudioFrameException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addMedia(Playlist selected) {
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter("Music files", "*.mp3"));
+		File f = fc.showOpenDialog(null);
+		String path = f.getAbsolutePath();
+		path.replace("\\", "/");
+		try {
+			selected.addSong(path);
+		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
+				| InvalidAudioFrameException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addVideo(Playlist selected) {
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter("Video files", "*.mp4"));
+		File f = fc.showOpenDialog(null);
+		String path = f.getAbsolutePath();
+		path.replace("\\", "/");
+		try {
+			selected.addSong(path);
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
@@ -339,7 +368,7 @@ public class GUI_MP3 {
 				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
 			}
 			else {
-				manager.getPlaylistManager().addPlaylist(txtPlaylistName.getText(), "MP4");
+				manager.addPlaylist(txtPlaylistName.getText(), "MP4");
 				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
 				initializePlaylistsGroupView();
 			}
@@ -349,7 +378,7 @@ public class GUI_MP3 {
 				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
 			}
 			else {
-				manager.getPlaylistManager().addPlaylist(txtPlaylistName.getText());
+				manager.addPlaylist(txtPlaylistName.getText());
 				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
 				initializePlaylistsGroupView();
 			}
@@ -359,26 +388,34 @@ public class GUI_MP3 {
 	@FXML
 	void showContent(MouseEvent event) throws IOException {
 		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
-		for (int i = 0; i < manager.getPlaylistManager().getPlaylists().size(); i++) {
-			if (temp == manager.getPlaylistManager().getPlaylists().get(i)) {
-				if (manager.getPlaylistManager().getPlaylists().get(i).getContent() == null) {
-					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songsTable.fxml"));
-					fxmlLoader.setController(this);    	
-					Parent songsTable = fxmlLoader.load();
-					userView.setCenter(songsTable);
-					initializeSongsView(temp);
+		for (int i = 0; i < manager.getPlaylists().size(); i++) {
+			if (temp == manager.getPlaylists().get(i)) {
+				if (manager.getPlaylists().get(i).getContent() == null) {
+					if (event.getButton()==MouseButton.PRIMARY) {
+						FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songsTable.fxml"));
+						fxmlLoader.setController(this);    	
+						Parent songsTable = fxmlLoader.load();
+						userView.setCenter(songsTable);
+						initializeSongsView(temp);
+					}
+					else if (event.getButton()==MouseButton.SECONDARY) {
+						addMedia(manager.getPlaylists().get(i));
+					}
 				}
 				else {
-					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("videoTable.fxml"));
-					fxmlLoader.setController(this);    	
-					Parent videoTable = fxmlLoader.load();
-					userView.setCenter(videoTable);
-					initializeVideosView(temp);
+					if (event.getButton()==MouseButton.PRIMARY) {
+						FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("videoTable.fxml"));
+						fxmlLoader.setController(this);    	
+						Parent videoTable = fxmlLoader.load();
+						userView.setCenter(videoTable);
+						initializeVideosView(temp);
+					}
+					else if (event.getButton()==MouseButton.SECONDARY) {
+						addVideo(manager.getPlaylists().get(i));
+					}
 				}
 			}
 		}
-
-
 	}
 
 	@FXML

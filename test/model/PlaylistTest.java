@@ -1,4 +1,5 @@
 package model;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
@@ -16,6 +17,12 @@ class PlaylistTest {
 	public void setupScenary1() {
 		p = new Playlist("Test");
 	}
+	
+	public void setupScenary2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		p = new Playlist("Test");
+		p.addSong("data/3 Doors Down - Here Without You.mp3");
+		p.addSong("data/505 lyrics - Arctic Monkeys.mp3");
+	}
 
 	@Test
 	public void testAddSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -25,6 +32,13 @@ class PlaylistTest {
 		assertEquals("3DoorsDownVEVO" ,p.getFirstSong().getArtist(), "Test failed");
 		assertEquals("3 Doors Down - Here Without You" ,p.getFirstSong().getTitle(), "Test failed");
 		assertEquals("3DoorsDownVEVO" ,p.getFirstSong().getAlbum(), "Test failed");
+	}
+	
+	@Test
+	public void testAddSong2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary2();
+		assertNotNull(p.getFirstSong());
+		assertNotNull(p.getFirstSong().getNextSong());
 	}
 
 	@Test

@@ -27,7 +27,7 @@
          <children>
             <TableView fx:id="tvPlaylistsGroup" onMouseClicked="#showContent" prefHeight="263.0" prefWidth="215.0">
               <columns>
-                <TableColumn fx:id="tcName" prefWidth="277.59998776912687" text="Playlists" />
+                <TableColumn fx:id="tcName" prefWidth="375.1999939084053" text="Playlists" />
               </columns>
             </TableView>
             <GridPane prefHeight="98.0" prefWidth="230.0">
