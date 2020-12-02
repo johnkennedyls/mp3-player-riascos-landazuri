@@ -6,14 +6,7 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="libraries/jaudiotagger-2.0.2.jar"/>
-<<<<<<< HEAD
-=======
-	<classpathentry kind="lib" path="libraries/basicplayer3.0.jar"/>
-	<classpathentry kind="lib" path="libraries/mysql-connector-java-5.1.49-bin.jar"/>
-	<classpathentry kind="lib" path="libraries/mysql-connector-java-8.0.22.jar"/>
->>>>>>> dd21dda403e9aba092836c2fae83d31ba02d4190
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="C:/Users/win10/eclipse-workspace/mp3-player-riascos-landazuri/libraries/jaudiotagger-2.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/win10/eclipse-workspace/mp3-player-riascos-landazuri/libraries/mysql-connector-java-5.1.49-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

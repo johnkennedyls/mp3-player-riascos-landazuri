@@ -77,15 +77,15 @@ public class Playlist {
 		return b;
 	}
 	
-	public Song searchVideo(String c) {
-		Song b = null;
+	public Video searchVideo(String c) {
+		Video b = null;
 
-		Song current = firstSong;
+		Video current = firstVideo;
 		while(current!=null && b==null) {
-			if(c.equalsIgnoreCase(current.getTitle())) {
+			if(c.equalsIgnoreCase(current.getName())) {
 				b = current;
 			}
-			current = current.getNextSong();
+			current = current.getNextVideo();
 		}
 
 		return b;
@@ -108,6 +108,30 @@ public class Playlist {
 				if(current.getNextSong()!=null) { //current is before
 					b = current.getNextSong();
 					current.setNextSong(current.getNextSong().getNextSong());
+				}
+			}
+		}
+
+		return b;
+	}
+	
+	public Video removeVideo(String c) {
+		Video b = null;
+
+		if(firstVideo!=null) {
+			if(c.equalsIgnoreCase(firstVideo.getName())) {
+				b = firstVideo;
+				firstVideo = firstVideo.getNextVideo();
+			}else {
+				Video current = firstVideo;
+				while(current.getNextVideo()!=null
+						&& !c.equals(current.getNextVideo().getName())) {
+					current = current.getNextVideo();
+				}
+
+				if(current.getNextVideo()!=null) { //current is before
+					b = current.getNextVideo();
+					current.setNextVideo(current.getNextVideo().getNextVideo());
 				}
 			}
 		}

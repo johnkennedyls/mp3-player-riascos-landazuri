@@ -23,6 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -37,11 +38,12 @@ import model.Manager;
 import model.Playlist;
 import model.Song;
 import model.Video;
-import model.VideoManager;
 
 public class GUI_MP3 {
 
 	private Manager manager;
+
+	private Playlist temp;
 
 	public GUI_MP3(Manager m){
 		manager = m;
@@ -49,10 +51,19 @@ public class GUI_MP3 {
 	boolean isPlaying = false;
 
 	@FXML
+	private MediaPlayer mp;
+
+	@FXML
 	private BorderPane mainPane;
 
 	@FXML
-	private MediaPlayer mp;
+	private BorderPane userView;
+
+	@FXML
+	private CheckBox yes;
+
+	@FXML
+	private CheckBox no;
 
 	@FXML
 	private Label currentTime;
@@ -62,6 +73,9 @@ public class GUI_MP3 {
 
 	@FXML
 	private Button btnCancel;
+
+	@FXML
+	private Button createPlaylist;
 
 	@FXML
 	private TextField txtName;
@@ -76,16 +90,16 @@ public class GUI_MP3 {
 	private TextField txtId;
 
 	@FXML
-	private TableView<Playlist> tvPlaylistGroup;
+	private TextField txtPlaylistName;
+
+	@FXML
+	private TableView<Playlist> tvPlaylistsGroup;
 
 	@FXML
 	private TableColumn<Playlist, String> tcName;
 
 	@FXML
 	private TableView<Song> tvPlaylist;
-
-	@FXML
-	private TableColumn<Song, String> tcNumber;
 
 	@FXML
 	private TableColumn<Song, String> tcTitle;
@@ -100,19 +114,13 @@ public class GUI_MP3 {
 	private TableColumn<Song, String> tcDuration;
 
 	@FXML
-	private TableView<VideoManager> tvVideo;
-
-	@FXML
-	private TableColumn<Video, Integer> tcNumberV;
+	private TableView<Video> tvVideo;
 
 	@FXML
 	private TableColumn<Video, String> tcTitleV;
 
 	@FXML
-	private TableColumn<Video, String> tcAuthor;
-
-	@FXML
-	private TableColumn<Video, String> tcWeight;
+	private TableColumn<Video, String> tcSize;
 
 	@FXML
 	private TableColumn<Video, String> tcDurationV;
@@ -121,21 +129,37 @@ public class GUI_MP3 {
 		manager = new Manager();
 	}
 
-	private void initializeTableView() {
+	private void initializePlaylistsGroupView() {
 		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylistManager().getPlaylists());
-		tvPlaylistGroup.setItems(observableList);
+		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
+	}
+
+	private void initializeSongsView(Playlist temp) {
+		ObservableList<Song> observableList = FXCollections.observableArrayList(temp.getPlaylist());
+		tvPlaylist.setItems(observableList);
+		tcTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title")); 
+		tcArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
+		tcAlbum.setCellValueFactory(new PropertyValueFactory<Song,String>("album"));	
+	}
+
+	private void initializeVideosView(Playlist temp) {
+		ObservableList<Video> observableList = FXCollections.observableArrayList(temp.getPlaylistV());
+		tvVideo.setItems(observableList);
+		tcTitleV.setCellValueFactory(new PropertyValueFactory<Video,String>("name")); 
+		tcSize.setCellValueFactory(new PropertyValueFactory<Video,String>("size"));
 	}
 
 	@FXML
 	void logIn(ActionEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("logIn.fxml"));
+		fxmlLoader.setController(this);   
 		Parent root = fxmlLoader.load();
 		Stage mainStage = new Stage();
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
 		mainStage.setTitle("My Way");
-		mainStage.show();
+		mainStage.show();	
 	}
 
 	@FXML
@@ -179,8 +203,7 @@ public class GUI_MP3 {
 			mainStage.setScene(scene);
 			mainStage.setTitle("My Way");
 			mainStage.show();
-			mainPane.setVisible(true);
-			mainPane.setDisable(true);
+			System.exit(0);
 		}
 	}
 
@@ -207,10 +230,12 @@ public class GUI_MP3 {
 
 	@FXML
 	void selectSongs(MouseEvent event) {
-		manager.setSongPlaying(tvPlaylist.getSelectionModel().getSelectedItem());
-		mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
-		mp.play();
-		isPlaying = true;
+		if (tvPlaylist.getSelectionModel().getSelectedItem() != null) {
+			manager.setSongPlaying(tvPlaylist.getSelectionModel().getSelectedItem());
+			mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
+			mp.play();
+			isPlaying = true;
+		}
 	}
 
 	@FXML
@@ -270,7 +295,7 @@ public class GUI_MP3 {
 	}
 
 	@FXML
-	void LoadSong(ActionEvent event) {
+	void addToSelectedPlaylist(ActionEvent event) {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter("music files", "*.mp3"));
 		File f = fc.showOpenDialog(null);
@@ -282,7 +307,6 @@ public class GUI_MP3 {
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
 		}
-		initializeTableView();
 	}
 
 	@FXML
@@ -302,15 +326,59 @@ public class GUI_MP3 {
 					public void handle(ActionEvent event) {
 						mainStage.close();
 					}
-				});				
+				});	
 	}
-	
+
 	@FXML
-	void showContent(MouseEvent event) {
-		manager.setSongPlaying(tvPlaylist.getSelectionModel().getSelectedItem());
-		mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
-		mp.play();
-		isPlaying = true;
+	void createPlaylist(ActionEvent event) {
+		if (yes.isSelected() && no.isSelected()) {
+			new Alert(Alert.AlertType.WARNING,"You should select just one option").showAndWait();
+		}
+		else if (yes.isSelected()) {
+			if (txtPlaylistName.getText().isEmpty()) {
+				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
+			}
+			else {
+				manager.getPlaylistManager().addPlaylist(txtPlaylistName.getText(), "MP4");
+				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
+				initializePlaylistsGroupView();
+			}
+		}
+		else if (no.isSelected()) {
+			if (txtPlaylistName.getText().isEmpty()) {
+				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
+			}
+			else {
+				manager.getPlaylistManager().addPlaylist(txtPlaylistName.getText());
+				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
+				initializePlaylistsGroupView();
+			}
+		}
+	}
+
+	@FXML
+	void showContent(MouseEvent event) throws IOException {
+		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
+		for (int i = 0; i < manager.getPlaylistManager().getPlaylists().size(); i++) {
+			if (temp == manager.getPlaylistManager().getPlaylists().get(i)) {
+				if (manager.getPlaylistManager().getPlaylists().get(i).getContent() == null) {
+					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songsTable.fxml"));
+					fxmlLoader.setController(this);    	
+					Parent songsTable = fxmlLoader.load();
+					userView.setCenter(songsTable);
+					initializeSongsView(temp);
+				}
+				else {
+					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("videoTable.fxml"));
+					fxmlLoader.setController(this);    	
+					Parent videoTable = fxmlLoader.load();
+					userView.setCenter(videoTable);
+					initializeVideosView(temp);
+				}
+			}
+		}
+
+
 	}
 
 	@FXML
