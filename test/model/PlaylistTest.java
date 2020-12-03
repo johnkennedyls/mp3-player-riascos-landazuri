@@ -23,6 +23,16 @@ class PlaylistTest {
 		p.addSong("data/3 Doors Down - Here Without You.mp3");
 		p.addSong("data/505 lyrics - Arctic Monkeys.mp3");
 	}
+	
+	public void setupScenary3() {
+		p = new Playlist("Test", "MP4");
+	}
+	
+	public void setupScenary4() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		p = new Playlist("Test", "MP4");
+		p.addVideo("data/11440017.MP4");
+		p.addVideo("data/11450004.MP4");
+	}
 
 	@Test
 	public void testAddSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -39,6 +49,22 @@ class PlaylistTest {
 		setupScenary2();
 		assertNotNull(p.getFirstSong());
 		assertNotNull(p.getFirstSong().getNextSong());
+	}
+	
+	@Test
+	public void testAddVideo() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary3();
+		p.addVideo("data/11440017.MP4");
+		assertNotNull(p.getFirstVideo());
+		assertEquals("11440017.MP4" ,p.getFirstVideo().getName(), "Test failed");
+		assertEquals("51.0 MB" ,p.getFirstVideo().getSize(), "Test failed");
+	}
+	
+	@Test
+	public void testAddVideo2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary4();
+		assertNotNull(p.getFirstVideo());
+		assertNotNull(p.getFirstVideo().getNextVideo());
 	}
 
 	@Test
@@ -60,6 +86,24 @@ class PlaylistTest {
 	}
 	
 	@Test
+	public void testSearchVideo() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary3();
+		p.addVideo("data/11440017.MP4");
+		Video b = p.searchVideo("11440017.MP4");
+		assertNotNull(b);
+	}
+	
+	@Test
+	public void testSearchVideo2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary4();
+		Video a = p.searchVideo("11440017.MP4");
+		Video b = p.searchVideo("11450004.MP4");
+		assertEquals("11450004.MP4", p.getFirstVideo().getNextVideo().getName(), "Como que no bro");
+		assertNotNull(a);
+		assertNotNull(b);
+	}
+	
+	@Test
 	public void testRemoveSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		setupScenary1();
 		p.addSong("data/3 Doors Down - Here Without You.mp3");
@@ -74,5 +118,22 @@ class PlaylistTest {
 		assertNull(p.getFirstSong().getNextSong());
 		p.removeSong("505 lyrics - Arctic Monkeys");
 		assertNull(p.getFirstSong());
+	}
+	
+	@Test
+	public void testRemoveVideo() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary3();
+		p.addVideo("data/11440017.MP4");
+		p.removeVideo("11440017.MP4");
+		assertNull(p.getFirstVideo());
+	}
+	
+	@Test
+	public void testRemoveVideo2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary4();
+		p.removeVideo("11440017.MP4");
+		assertNull(p.getFirstVideo().getNextVideo());
+		p.removeVideo("11450004.MP4");
+		assertNull(p.getFirstVideo());
 	}
 }

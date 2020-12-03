@@ -10,6 +10,9 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import org.junit.jupiter.api.Test;
 
+import exceptions.UserAlreadyExistsException;
+import exceptions.UserDoesNotExistsException;
+
 public class ManagerTest {
 
 	private Manager m;
@@ -24,7 +27,7 @@ public class ManagerTest {
 		m.addPlaylist("MP4", "MP4");
 	}
 	
-	public void setupScenary3() {
+	public void setupScenary3() throws UserAlreadyExistsException {
 		m = new Manager();
 		m.addUser("Juan", "Juan@gmail.com", "1234", 1234);
 		m.addUser("Jose", "Jose@gmail.com", "1234", 4567);	
@@ -33,7 +36,7 @@ public class ManagerTest {
 		m.addUser("Mario", "Mario@gmail.com", "1234", 6584);
 	}
 	
-	public void setupScenary4() {
+	public void setupScenary4() throws UserAlreadyExistsException {
 		m = new Manager();
 		m.addUser("Juan", "Juan@gmail.com", "1234", 9874);
 		m.addUser("Jose", "Jose@gmail.com", "1234", 4567);	
@@ -62,7 +65,7 @@ public class ManagerTest {
 	}
 	
 	@Test
-	public void addUserTest() {
+	public void addUserTest() throws UserAlreadyExistsException {
 		setupScenary1();
 		m.addUser("Juan", "Juan@gmail.com", "1234", 1234);
 		assertEquals(1, m.getUsers().size(), "Not added all");
@@ -72,15 +75,23 @@ public class ManagerTest {
 	}
 	
 	@Test
-	public void addUserTest2() {
+	public void addUserTest2() throws UserAlreadyExistsException {
 		setupScenary3();
 		assertEquals(5, m.getUsers().size(), "Not added all");
 	}
 	
 	@Test
-	public void addUserTest3() {
+	public void addUserTest3() throws UserAlreadyExistsException {
 		setupScenary4();
+		m.addUser("Juan", "Juan@gmail.com", "1234", 9874);
 		assertEquals(5, m.getUsers().size(), "Add an incorrect one");
+	}
+	
+	@Test
+	public void removeUserTest() throws UserAlreadyExistsException, UserDoesNotExistsException {
+		setupScenary4();
+		m.removeUser(9874);
+		assertEquals(4, m.getUsers().size(), "Doesn't remove the user");
 	}
 	
 }

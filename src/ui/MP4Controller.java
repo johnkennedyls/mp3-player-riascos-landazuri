@@ -48,7 +48,7 @@ public class MP4Controller implements Initializable {
 		hight.bind(Bindings.selectDouble(mediaView.sceneProperty(), "hight"));
 
 		slider.setValue(mediaPlayer.getVolume() * 100);
-		//seekSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+		
 		slider.valueProperty().addListener(new InvalidationListener() {
 
 			@Override

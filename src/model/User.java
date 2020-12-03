@@ -1,6 +1,6 @@
 package model;
 
-public class User {
+public class User implements Comparable<User>{
 	
 	private String name;
 	private String email;
@@ -28,5 +28,18 @@ public class User {
 	
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public int compareTo(User user) {
+		int comp;
+		if(id<user.getId()) {
+			comp = -1;
+		}else if(id>user.getId()) {
+			comp = 1;
+		}else {
+			comp = 0;
+		}
+		return comp;
 	}
 }

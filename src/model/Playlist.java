@@ -9,6 +9,8 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
+import exceptions.NotFoundException;
+
 public class Playlist {
 
 	private int idPlaylist;
@@ -34,38 +36,53 @@ public class Playlist {
 
 	public void addSong(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		Song newSong = new Song(path);
-
 		if(firstSong==null) {
 			firstSong = newSong;
+			playlist();
 		}else {
-			Song current = firstSong;
-			while(current.getNextSong()!=null) {
-				current = current.getNextSong();
-			}
+			recursiveAddSong(firstSong, newSong);
+		}
+	}
+	
+	private void recursiveAddSong(Song current, Song newSong) {
+		if (current.getNextSong() != null) {
+			recursiveAddSong(current.getNextSong(), newSong);
+			return;
+		}
+		else {
 			current.setNextSong(newSong);
 			newSong.setPrevSong(current);
+			playlist();
 		}
-		playlist();
 	}
 
 	public void addVideo(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		Video newVideo = new Video(path);
-
-		if(firstVideo == null) {
+		if(firstVideo==null) {
 			firstVideo = newVideo;
+			playlistV();
 		}else {
-			Video current = firstVideo;
-			while(current.getNextVideo()!=null) {
-				current = current.getNextVideo();
-			}
+			recursiveAddVideo(firstVideo, newVideo);
+		}
+	}
+	
+	private void recursiveAddVideo(Video current, Video newVideo) {
+		if (current.getNextVideo() != null) {
+			recursiveAddVideo(current.getNextVideo(), newVideo);
+			return;
+		}
+		else {
 			current.setNextVideo(newVideo);
 			newVideo.setPrevVideo(current);
+			playlistV();
 		}
-		playlistV();
-	}
+	}	
 
-	public Song searchSong(String c) {
+	public Song searchSong(String c) throws NotFoundException {
 		Song found =recursiveSearchSong(firstSong, c);
+		if (found == null) {
+			throw new NotFoundException();
+		}
 		return found;
 	}
 
@@ -166,20 +183,16 @@ public class Playlist {
 		}
 	}
 
-	public List<Song> getPlaylist() {
-		return playlist;
-	}
-
 	public Song getFirstSong() {
 		return firstSong;
+	}
+	
+	public Video getFirstVideo() {
+		return firstVideo;
 	}
 
 	public String getContent() {
 		return content;
-	}
-
-	public List<Video> getPlaylistV() {
-		return playlistV;
 	}
 
 	public String getName() {
@@ -192,6 +205,14 @@ public class Playlist {
 
 	public int getIdUser() {
 		return idUser;
+	}
+	
+	public List<Video> getPlaylistV() {
+		return playlistV;
+	}
+	
+	public List<Song> getPlaylist() {
+		return playlist;
 	}
 
 	public void setName(String name) {

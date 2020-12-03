@@ -1,9 +1,13 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import exceptions.UserAlreadyExistsException;
+import exceptions.UserDoesNotExistsException;
 
 public class Manager {
 
@@ -24,7 +28,7 @@ public class Manager {
 		playlists.add(new Playlist(name, content));
 	}
 	
-	public String addUser(String na, String em, String pass, int id) {
+	public String addUser(String na, String em, String pass, int id) throws UserAlreadyExistsException {
 		String info = "";
 		if (users.isEmpty()) {
 			users.add(new User(na, em, pass, id));
@@ -34,7 +38,7 @@ public class Manager {
 			info += "User added succesfully";
 		}
 		else {
-			info += "The ID alredy exists";
+			throw new UserAlreadyExistsException();
 		}
 		return info;
 	}
@@ -43,6 +47,12 @@ public class Manager {
 		boolean found = false;
 		int start = 0;
 		int end = users.size() - 1;
+		
+		List<User> clon = new ArrayList<>();
+		
+		for (int i = 0; i < users.size(); i++) {
+			clon.add(users.get(i));
+		}
 		
 		class SortUsers implements Comparator<User>{
 			@Override
@@ -63,12 +73,50 @@ public class Manager {
 			else
 				start = medio + 1;
 		}
+		
+		users = clon;
 		return found;
 	}
 	
-	public void removeUser(int id) {
+	public User binarySearch2(int id) {
+		User searched = null;
+		boolean found = false;
+		int start = 0;
+		int end = users.size() - 1;
 		
-//		users.remove();
+		Object[] toSort =  users.toArray();
+		
+		Arrays.sort(toSort);
+		
+		users.clear();
+		
+		for (int i = 0; i < toSort.length; i++) {
+			users.add((User)toSort[i]);
+		}
+		
+		while(start <= end && !found ) {	
+			int medio = ( start + end ) / 2;
+			if(users.get(medio).getId() == id ) {
+				found = true;
+				searched = users.get(medio);
+			}
+			else if(users.get(medio).getId() > id )
+				end = medio - 1;
+			else
+				start = medio + 1;
+		}
+		return searched;
+	}
+	
+	public String removeUser(int id) throws UserDoesNotExistsException{
+		String info = "";
+		User user = binarySearch2(id);
+		if (user != null) {
+			users.remove(user);
+		}
+		else
+			throw new UserDoesNotExistsException();
+		return info;
 	}
 	
 	public List<User> getUsers() {
@@ -86,5 +134,5 @@ public class Manager {
 	public void setSongPlaying(Song song) {
 		songPlaying = song;
 	}
-	
+
 }
