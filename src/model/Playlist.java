@@ -23,6 +23,7 @@ public class Playlist {
 	public Playlist(String na) {
 		name = na;
 		playlist = new ArrayList<>();
+		content = "MP3";
 	}
 	
 	public Playlist(String na, String cont) {
@@ -60,7 +61,7 @@ public class Playlist {
 			current.setNextVideo(newVideo);
 			newVideo.setPrevVideo(current);
 		}
-		playlist();
+		playlistV();
 	}
 
 	public Song searchSong(String c) {

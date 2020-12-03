@@ -23,16 +23,16 @@
       </Label>
    </top>
    <left>
-      <VBox alignment="CENTER" prefHeight="412.0" prefWidth="376.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="391.0" prefWidth="376.0" BorderPane.alignment="CENTER">
          <children>
             <TableView fx:id="tvPlaylistsGroup" onMouseClicked="#showContent" prefHeight="263.0" prefWidth="215.0">
               <columns>
-                <TableColumn fx:id="tcName" prefWidth="375.1999939084053" text="Playlists" />
+                <TableColumn fx:id="tcName" prefWidth="267.2000366449356" text="Playlists" />
+                  <TableColumn fx:id="tcContent" prefWidth="107.99993896484375" text="Content" />
               </columns>
             </TableView>
             <GridPane prefHeight="98.0" prefWidth="230.0">
               <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
@@ -40,7 +40,6 @@
               </rowConstraints>
                <children>
                   <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#createNewPlaylist" prefHeight="26.0" prefWidth="161.0" text="Create new playlist" />
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#addToSelectedPlaylist" prefHeight="30.0" prefWidth="158.0" text="Add to selected playlist" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>

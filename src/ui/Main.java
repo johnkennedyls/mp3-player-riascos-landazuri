@@ -16,8 +16,7 @@ public class Main extends Application {
 	private Manager manager;
 	
 	public Main() {
-		manager = new Manager();
-		guiMp3 = new GUI_MP3(manager);
+		
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException{
@@ -27,7 +26,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
-
+		manager = new Manager();
+		guiMp3 = new GUI_MP3(manager, primaryStage);
 		fxmlLoader.setController(guiMp3);
 		
 		Parent root = fxmlLoader.load();

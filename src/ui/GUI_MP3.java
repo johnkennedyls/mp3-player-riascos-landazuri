@@ -42,12 +42,19 @@ import model.Video;
 
 public class GUI_MP3 {
 
-	private Manager manager;
+	private Manager manager = new Manager();
+	
+	private MP4Controller mp4Con;
+	
+	private Stage primaryStage;
+	
+	private Stage currentStage;
 
 	private Playlist temp;
 
-	public GUI_MP3(Manager m){
+	public GUI_MP3(Manager m, Stage primary){
 		manager = m;
+		primaryStage = primary;
 	}
 	boolean isPlaying = false;
 
@@ -99,6 +106,9 @@ public class GUI_MP3 {
 	@FXML
 	private TableColumn<Playlist, String> tcName;
 
+    @FXML
+    private TableColumn<Playlist, String> tcContent;
+    
 	@FXML
 	private TableView<Song> tvPlaylist;
 
@@ -127,13 +137,13 @@ public class GUI_MP3 {
 	private TableColumn<Video, String> tcDurationV;
 
 	public void initialize() {
-		manager = new Manager();
 	}
 
 	private void initializePlaylistsGroupView() {
 		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylists());
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
+		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content")); 
 	}
 
 	private void initializeSongsView(Playlist temp) {
@@ -160,7 +170,9 @@ public class GUI_MP3 {
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
 		mainStage.setTitle("My Way");
-		mainStage.show();	
+		mainStage.show();
+		currentStage = mainStage;
+		primaryStage.close();
 	}
 
 	@FXML
@@ -173,6 +185,8 @@ public class GUI_MP3 {
 		mainStage.setScene(scene);
 		mainStage.setTitle("My Way");
 		mainStage.show();
+		currentStage = mainStage;
+		primaryStage.close();
 	}
 
 	@FXML
@@ -203,8 +217,8 @@ public class GUI_MP3 {
 			Scene scene = new Scene(root);
 			mainStage.setScene(scene);
 			mainStage.setTitle("My Way");
+			currentStage.close();
 			mainStage.show();
-			System.exit(0);
 		}
 	}
 
@@ -217,16 +231,20 @@ public class GUI_MP3 {
 		Scene scene = new Scene(root);
 		mainStage.setScene(scene);
 		mainStage.setTitle("My Way");
+		currentStage.close();
 		mainStage.show();
-
 	}
 
 	@FXML
 	void back(ActionEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
-
 		fxmlLoader.setController(this);
-		mainPane.setCenter(fxmlLoader.load());
+		Parent root = fxmlLoader.load();
+		Scene scene = new Scene(root);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("My Way");
+		currentStage.close();
+		primaryStage.show();
 	}
 
 	@FXML
@@ -295,21 +313,6 @@ public class GUI_MP3 {
 		}
 	}
 
-	@FXML
-	void addToSelectedPlaylist(ActionEvent event) {
-		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().add(new ExtensionFilter("music files", "*.mp3"));
-		File f = fc.showOpenDialog(null);
-		String path = f.getAbsolutePath();
-		path.replace("\\", "/");
-		try {
-			manager.getPlaylists().get(0).addSong(path);
-		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
-				| InvalidAudioFrameException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void addMedia(Playlist selected) {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter("Music files", "*.mp3"));
@@ -331,7 +334,7 @@ public class GUI_MP3 {
 		String path = f.getAbsolutePath();
 		path.replace("\\", "/");
 		try {
-			selected.addSong(path);
+			selected.addVideo(path);
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
@@ -390,7 +393,7 @@ public class GUI_MP3 {
 		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
 		for (int i = 0; i < manager.getPlaylists().size(); i++) {
 			if (temp == manager.getPlaylists().get(i)) {
-				if (manager.getPlaylists().get(i).getContent() == null) {
+				if (manager.getPlaylists().get(i).getContent().equals("MP3")) {
 					if (event.getButton()==MouseButton.PRIMARY) {
 						FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songsTable.fxml"));
 						fxmlLoader.setController(this);    	
@@ -400,6 +403,7 @@ public class GUI_MP3 {
 					}
 					else if (event.getButton()==MouseButton.SECONDARY) {
 						addMedia(manager.getPlaylists().get(i));
+						tvPlaylist.refresh();
 					}
 				}
 				else {
@@ -412,6 +416,7 @@ public class GUI_MP3 {
 					}
 					else if (event.getButton()==MouseButton.SECONDARY) {
 						addVideo(manager.getPlaylists().get(i));
+						tvVideo.refresh();
 					}
 				}
 			}
@@ -419,16 +424,18 @@ public class GUI_MP3 {
 	}
 
 	@FXML
-	void openVideo(MouseEvent event) {
-
-	}
-
-	@FXML
-	void goMP4(ActionEvent event) throws IOException {
+	void openVideo(MouseEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mp4.fxml"));
-
-		mainPane.getChildren().clear();
-		mainPane.setCenter(fxmlLoader.load());
+		Video v = tvVideo.getSelectionModel().getSelectedItem();
+		mp4Con = new MP4Controller(v.getFilePath());
+		fxmlLoader.setController(mp4Con);
+		Parent root = fxmlLoader.load();
+		Stage mainStage = new Stage();
+		mainStage.initModality(Modality.NONE);
+		Scene scene = new Scene(root);
+		mainStage.setScene(scene);
+		mainStage.setTitle("Video view");
+		mainStage.show();
 	}
 
 }

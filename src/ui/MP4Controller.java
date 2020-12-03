@@ -1,8 +1,5 @@
 package ui;
 
-import java.io.File;
-
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 public class MP4Controller implements Initializable {
@@ -37,59 +33,49 @@ public class MP4Controller implements Initializable {
 	@FXML
 	private Slider seekSlider;
 
-	private String filePath;
 
-	@FXML
-	private void handleButtonAction(ActionEvent event) {
-		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Select a file (*.mp4)", "*.mp4");
-		fileChooser.getExtensionFilters().add(filter);
-		File file = fileChooser.showOpenDialog(null);
-		filePath = file.toURI().toString();
+	public MP4Controller(String filePath) {
+		Media media = new Media(filePath);
+		mediaPlayer = new MediaPlayer(media);
+	}
+	
+	private void components() {
+		mediaView.setMediaPlayer(mediaPlayer);
+		DoubleProperty width = mediaView.fitWidthProperty();
+		DoubleProperty hight = mediaView.fitHeightProperty();
 
+		width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+		hight.bind(Bindings.selectDouble(mediaView.sceneProperty(), "hight"));
 
-		if(filePath != null) {
-			Media media = new Media(filePath);
-			mediaPlayer = new MediaPlayer(media);
-			mediaView.setMediaPlayer(mediaPlayer);
-			DoubleProperty width = mediaView.fitWidthProperty();
-			DoubleProperty hight = mediaView.fitHeightProperty();
+		slider.setValue(mediaPlayer.getVolume() * 100);
+		//seekSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+		slider.valueProperty().addListener(new InvalidationListener() {
 
-			width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
-			hight.bind(Bindings.selectDouble(mediaView.sceneProperty(), "hight"));
+			@Override
+			public void invalidated(Observable observable) {
+				mediaPlayer.setVolume(slider.getValue()/100);
 
-			slider.setValue(mediaPlayer.getVolume() * 100);
-			//seekSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
-			slider.valueProperty().addListener(new InvalidationListener() {
+			}
+		});
 
-				@Override
-				public void invalidated(Observable observable) {
-					mediaPlayer.setVolume(slider.getValue()/100);
+		mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 
-				}
-			});
+			@Override
+			public void changed(ObservableValue<? extends Duration> observable, Duration oldValue,
+					Duration newValue) {
+				seekSlider.setValue(newValue.toSeconds());
 
-			mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+			}
+		});
 
-				@Override
-				public void changed(ObservableValue<? extends Duration> observable, Duration oldValue,
-						Duration newValue) {
-					seekSlider.setValue(newValue.toSeconds());
+		seekSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
 
-				}
-			});
+			@Override
+			public void handle(MouseEvent arg0) {
+				mediaPlayer.seek(Duration.seconds(seekSlider.getValue()));							
+			}
 
-			seekSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent arg0) {
-					mediaPlayer.seek(Duration.seconds(seekSlider.getValue()));							
-				}
-
-			});
-
-			mediaPlayer.play();
-		}
+		});
 	}
 
 	@FXML
@@ -99,6 +85,7 @@ public class MP4Controller implements Initializable {
 
 	@FXML
 	private void playVideo(ActionEvent event) {
+		components();
 		mediaPlayer.play();
 		mediaPlayer.setRate(1);
 	}
@@ -111,8 +98,6 @@ public class MP4Controller implements Initializable {
 	@FXML
 	private void fastVideo(ActionEvent event) {
 		mediaPlayer.setRate(1.5);
-
-
 	}
 
 	@FXML
@@ -128,11 +113,6 @@ public class MP4Controller implements Initializable {
 	@FXML
 	private void slowerVideo(ActionEvent event) {
 		mediaPlayer.setRate(.50);
-	}
-
-	@FXML
-	private void exitVideo(ActionEvent event) {
-		System.exit(0);
 	}
 
 	@Override
