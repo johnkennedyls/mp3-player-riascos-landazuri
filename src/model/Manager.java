@@ -1,23 +1,19 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Manager {
 
-	private Register r;
 	private Song songPlaying;
 	private List<Playlist> playlists;
 	private List<User> users;
 	
 	public Manager() {
-		r = new Register();
 		playlists = new ArrayList<>();
 		users = new ArrayList<>();
-	}
-
-	public Register getRegister() {
-		return r;
 	}
 	
 	public void addPlaylist(String name) {
@@ -30,7 +26,10 @@ public class Manager {
 	
 	public String addUser(String na, String em, String pass, int id) {
 		String info = "";
-		if (uniqueUserId(id)) {
+		if (users.isEmpty()) {
+			users.add(new User(na, em, pass, id));
+		}
+		else if (!binarySearch(id)) {
 			users.add(new User(na, em, pass, id));
 			info += "User added succesfully";
 		}
@@ -39,27 +38,22 @@ public class Manager {
 		}
 		return info;
 	}
-	
-	/**
-	 * This method check if the user ID isn't duplicate
-	 * @param id is the user ID number 
-	 * @return a boolean with the result of the search
-	 */
-	public boolean uniqueUserId(int id){
-		boolean unique = true;
-		for(int i=0; i<users.size() && unique; i++){
-			if(users.get(i).getId() == id){
-				unique = false;
-			}
-		}
-		return unique;
-	}
 
 	public boolean binarySearch(int id) {
 		boolean found = false;
 		int start = 0;
 		int end = users.size() - 1;
-
+		
+		class SortUsers implements Comparator<User>{
+			@Override
+			public int compare(User o1, User o2) {
+				int value1 = 0;
+				value1 = o1.getId() - o2.getId();
+				return value1;
+			}
+		}
+		Collections.sort(users, new SortUsers());
+		
 		while(start <= end && !found ) {	
 			int medio = ( start + end ) / 2;
 			if(users.get(medio).getId() == id )
@@ -71,11 +65,11 @@ public class Manager {
 		}
 		return found;
 	}
-
-//	public void removeUser(int id) {
-//		
+	
+	public void removeUser(int id) {
+		
 //		users.remove();
-//	}
+	}
 	
 	public List<User> getUsers() {
 		return users;

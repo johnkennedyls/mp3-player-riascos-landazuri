@@ -25,7 +25,7 @@ public class Playlist {
 		playlist = new ArrayList<>();
 		content = "MP3";
 	}
-	
+
 	public Playlist(String na, String cont) {
 		name = na;
 		content = cont;
@@ -47,7 +47,7 @@ public class Playlist {
 		}
 		playlist();
 	}
-	
+
 	public void addVideo(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		Video newVideo = new Video(path);
 
@@ -65,31 +65,39 @@ public class Playlist {
 	}
 
 	public Song searchSong(String c) {
-		Song b = null;
-
-		Song current = firstSong;
-		while(current!=null && b==null) {
-			if(c.equalsIgnoreCase(current.getTitle())) {
-				b = current;
-			}
-			current = current.getNextSong();
-		}
-
-		return b;
+		Song found =recursiveSearchSong(firstSong, c);
+		return found;
 	}
-	
-	public Video searchVideo(String c) {
-		Video b = null;
 
-		Video current = firstVideo;
-		while(current!=null && b==null) {
-			if(c.equalsIgnoreCase(current.getName())) {
-				b = current;
+	private Song recursiveSearchSong(Song current, String c) {
+		Song found = null;
+		if (current != null) {
+			if(c.equalsIgnoreCase(current.getTitle())) {
+				found = current;
 			}
-			current = current.getNextVideo();
-		}
+			else {
+				return recursiveSearchSong(current.getNextSong(), c);
+			}
+		}	
+		return found;
+	}
 
-		return b;
+	public Video searchVideo(String c) {
+		Video found = recursiveSearchVideo(firstVideo, c);
+		return found;
+	}
+
+	private Video recursiveSearchVideo(Video current, String c) {
+		Video found = null;
+		if (current != null) {
+			if(c.equalsIgnoreCase(current.getName())) {
+				found = current;
+			}
+			else {
+				return recursiveSearchVideo(current.getNextVideo(), c);
+			}
+		}	
+		return found;
 	}
 
 	public Song removeSong(String c) {
@@ -115,7 +123,7 @@ public class Playlist {
 
 		return b;
 	}
-	
+
 	public Video removeVideo(String c) {
 		Video b = null;
 
@@ -148,7 +156,7 @@ public class Playlist {
 			song = song.getNextSong();
 		}
 	}
-	
+
 	public void playlistV(){
 		playlistV.clear();
 		Video video = firstVideo;
@@ -157,7 +165,7 @@ public class Playlist {
 			video = video.getNextVideo();
 		}
 	}
-	
+
 	public List<Song> getPlaylist() {
 		return playlist;
 	}
@@ -165,7 +173,7 @@ public class Playlist {
 	public Song getFirstSong() {
 		return firstSong;
 	}
-	
+
 	public String getContent() {
 		return content;
 	}

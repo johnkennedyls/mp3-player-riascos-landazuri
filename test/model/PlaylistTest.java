@@ -47,8 +47,16 @@ class PlaylistTest {
 		p.addSong("data/3 Doors Down - Here Without You.mp3");
 		Song b = p.searchSong("3 Doors Down - Here Without You");
 		assertNotNull(b);
-		p.removeSong("3 Doors Down - Here Without You");
-		assertNull(p.getFirstSong());
+	}
+	
+	@Test
+	public void testSearchSong2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary2();
+		Song a = p.searchSong("3 Doors Down - Here Without You");
+		Song b = p.searchSong("505 lyrics - Arctic Monkeys");
+		assertEquals("505 lyrics - Arctic Monkeys", p.getFirstSong().getNextSong().getTitle(), "Como que no bro");
+		assertNotNull(a);
+		assertNotNull(b);
 	}
 	
 	@Test
@@ -56,6 +64,15 @@ class PlaylistTest {
 		setupScenary1();
 		p.addSong("data/3 Doors Down - Here Without You.mp3");
 		p.removeSong("3 Doors Down - Here Without You");
+		assertNull(p.getFirstSong());
+	}
+	
+	@Test
+	public void testRemoveSong2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setupScenary2();
+		p.removeSong("3 Doors Down - Here Without You");
+		assertNull(p.getFirstSong().getNextSong());
+		p.removeSong("505 lyrics - Arctic Monkeys");
 		assertNull(p.getFirstSong());
 	}
 }

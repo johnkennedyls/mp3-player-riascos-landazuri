@@ -2,7 +2,6 @@ package ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -194,7 +193,7 @@ public class GUI_MP3 {
 		boolean changed = false;
 
 		try {
-			String info = manager.getRegister().createRegister(txtName.getText(), txtEmail.getText(), txtPassword.getText(), Integer.parseInt(txtId.getText()));
+			String info = manager.addUser(txtName.getText(), txtEmail.getText(), txtPassword.getText(), Integer.parseInt(txtId.getText()));
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Register");
 			alert.setHeaderText(info);
@@ -204,8 +203,6 @@ public class GUI_MP3 {
 			changed = true;
 		} catch (NumberFormatException e) {
 			new Alert(Alert.AlertType.ERROR,"You should enter a integer number in the time field").showAndWait();
-		} catch (SQLException e) {
-			new Alert(Alert.AlertType.ERROR,"The register can't be created").showAndWait();
 		}
 
 		if (changed) {
