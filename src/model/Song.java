@@ -91,4 +91,11 @@ public class Song {
 		this.reproducing = reproducing;
 	}
 	
+	public String toString() {
+		String msg = "";
+		String separator = ", ";
+		msg = title + separator + artist + separator + album;
+		return msg;
+	}
+	
 }

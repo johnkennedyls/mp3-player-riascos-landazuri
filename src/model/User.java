@@ -42,4 +42,11 @@ public class User implements Comparable<User>{
 		}
 		return comp;
 	}
+	
+	public String toString() {
+		String msg = "";
+		String separator = ", ";
+		msg = name + separator + email + separator + passWord + separator + id;
+		return msg;
+	}
 }

@@ -89,5 +89,12 @@ public class Video {
 	public void setSizing(double sizing) {
 		this.sizing = sizing;
 	}
+	
+	public String toString() {
+		String msg = "";
+		String separator = ", ";
+		msg = name + separator + size;
+		return msg;
+	}
 
 }
