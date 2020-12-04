@@ -20,8 +20,8 @@
    <center>
       <GridPane prefHeight="348.0" prefWidth="462.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -29,10 +29,10 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" prefHeight="29.0" prefWidth="300.0" text="e-mail" />
-            <Label alignment="CENTER" prefHeight="18.0" prefWidth="303.0" text="password" GridPane.rowIndex="1" />
-            <TextField fx:id="txtEmail" GridPane.columnIndex="1" />
-            <TextField fx:id="txtPassWord" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefHeight="29.0" prefWidth="300.0" text="ID" />
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="303.0" text="Password" GridPane.rowIndex="1" />
+            <TextField fx:id="txtId" GridPane.columnIndex="1" />
+            <TextField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Button mnemonicParsing="false" onAction="#loadLogin" text="Log in" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#back" text="Back" GridPane.rowIndex="2" />
          </children>

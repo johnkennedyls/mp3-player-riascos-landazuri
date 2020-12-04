@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,9 @@ import org.jaudiotagger.tag.TagException;
 
 import exceptions.NotFoundException;
 
-public class Playlist {
+public class Playlist implements Serializable{
 
+	private static final long serialVersionUID = 1;
 	private int idPlaylist;
 	private String name;
 	private String content;
@@ -182,13 +184,21 @@ public class Playlist {
 			video = video.getNextVideo();
 		}
 	}
-
+	
 	public Song getFirstSong() {
 		return firstSong;
 	}
 	
+	public void setFirstSong(Song fs) {
+		firstSong = fs;
+	}
+	
 	public Video getFirstVideo() {
 		return firstVideo;
+	}
+	
+	public void setFirstVideo(Video fv) {
+		firstVideo = fv;
 	}
 
 	public String getContent() {
@@ -219,6 +229,7 @@ public class Playlist {
 		this.name = name;
 	}
 
+
 	public String toString() {
 		String msg = "PlayList " + name + ": \n";
 		if(content == "") {
@@ -245,4 +256,7 @@ public class Playlist {
 	
 		return msg;
 	}
+
+	
+
 }

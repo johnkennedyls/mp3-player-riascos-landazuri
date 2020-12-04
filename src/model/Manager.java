@@ -1,21 +1,39 @@
 package model;
 
+
 import java.io.FileNotFoundException;
+
 import java.io.PrintWriter;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import exceptions.NotFoundException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserDoesNotExistsException;
 
-public class Manager {
+public class Manager implements Serializable{
 
+	private static final long serialVersionUID = 1;
 	private Song songPlaying;
 	private List<Playlist> playlists;
 	private List<User> users;
+	
+	private final static String SAVE_PATH_FILE_USERS = "data/users.xd";
+	private final static String SAVE_PATH_FILE_PLAYLISTS = "data/playlists.xd";
+	private final static String SAVE_PATH_FILE_SONGS = "data/songs.xd";
+	private final static String SAVE_PATH_FILE_VIDEOS = "data/videos.xd";
 	
 	public Manager() {
 		playlists = new ArrayList<>();
@@ -35,7 +53,7 @@ public class Manager {
 		if (users.isEmpty()) {
 			users.add(new User(na, em, pass, id));
 		}
-		else if (!binarySearch(id)) {
+		else if (!userExists(id)) {
 			users.add(new User(na, em, pass, id));
 			info += "User added succesfully";
 		}
@@ -45,7 +63,7 @@ public class Manager {
 		return info;
 	}
 
-	public boolean binarySearch(int id) {
+	public boolean userExists(int id) {
 		boolean found = false;
 		int start = 0;
 		int end = users.size() - 1;
@@ -80,7 +98,7 @@ public class Manager {
 		return found;
 	}
 	
-	public User binarySearch2(int id) {
+	public User searchUser(int id) {
 		User searched = null;
 		boolean found = false;
 		int start = 0;
@@ -112,12 +130,93 @@ public class Manager {
 	
 	public String removeUser(int id) throws UserDoesNotExistsException{
 		String info = "";
-		User user = binarySearch2(id);
+		User user = searchUser(id);
 		if (user != null) {
 			users.remove(user);
 		}
 		else
 			throw new UserDoesNotExistsException();
+		return info;
+	}
+	
+	public void saveData(String type) throws IOException{
+		if(type.equalsIgnoreCase("users")) {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_USERS));
+			oos.writeObject(users);
+			oos.close();
+		} 
+		if(type.equalsIgnoreCase("play")) {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_PLAYLISTS));
+			oos.writeObject(playlists);
+			oos.close();
+		}
+		if(type.equalsIgnoreCase("song")) {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_SONGS));
+			for (int i = 0; i < playlists.size(); i++) {
+				oos.writeObject(playlists.get(i).getFirstSong());
+			}
+			oos.close();
+		} 
+		if(type.equalsIgnoreCase("video")) {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_VIDEOS));
+			for (int i = 0; i < playlists.size(); i++) {
+				oos.writeObject(playlists.get(i).getFirstVideo());
+			}
+			oos.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String loadData() throws IOException, ClassNotFoundException, NotFoundException{
+		File u = new File(SAVE_PATH_FILE_USERS);
+		File p = new File(SAVE_PATH_FILE_PLAYLISTS);
+		File ps = new File(SAVE_PATH_FILE_SONGS);
+		File pv = new File(SAVE_PATH_FILE_VIDEOS);
+		String info = "";
+		boolean loaded = false;
+		if(u.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(u));
+			users = (List<User>)ois.readObject();
+			ois.close();	
+			loaded = true;
+		}
+		else {
+			throw new NotFoundException();
+		}
+		if(p.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(p));
+			playlists = (List<Playlist>)ois.readObject();
+			ois.close();
+			loaded = true;
+		}
+		else {
+			throw new NotFoundException();
+		}
+		if(ps.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ps));
+			for (int i = 0; i < playlists.size(); i++) {
+				Song firstSong = (Song)ois.readObject();
+				playlists.get(i).setFirstSong(firstSong); 
+			}
+			ois.close();	
+		}
+		else {
+			throw new NotFoundException();
+		}
+		if(pv.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(pv));
+			for (int i = 0; i < playlists.size(); i++) {
+				Video firstVideo = (Video)ois.readObject();
+				playlists.get(i).setFirstVideo(firstVideo); 
+			}
+			ois.close();
+		}
+		else {
+			throw new NotFoundException();
+		}
+		if (!loaded) {
+			info += "Nothing to load";
+		}
 		return info;
 	}
 	
