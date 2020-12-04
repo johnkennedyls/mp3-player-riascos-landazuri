@@ -3,6 +3,7 @@
 import java.io.File;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -15,8 +16,9 @@ import org.jaudiotagger.tag.TagException;
 
 import javafx.scene.media.Media;
 
-public class Song {
+public class Song implements Serializable{
 
+	private static final long serialVersionUID = 1;
 	private Media media;
 	private String artist;
 	private String album;

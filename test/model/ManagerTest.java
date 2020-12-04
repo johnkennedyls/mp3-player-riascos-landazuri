@@ -58,8 +58,8 @@ public class ManagerTest {
 	@Test
 	public void contentTest() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		setupScenary2();
-		m.getPlaylists().get(0).addSong("data/3 Doors Down - Here Without You.mp3");
-		m.getPlaylists().get(0).addSong("data/505 lyrics - Arctic Monkeys.mp3");
+		m.getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
+		m.getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
 		assertNotNull(m.getPlaylists().get(0).getFirstSong());
 		assertNotNull(m.getPlaylists().get(0).getFirstSong().getNextSong());
 	}

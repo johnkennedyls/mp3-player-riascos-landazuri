@@ -1,11 +1,13 @@
 package model;
 
 import java.io.File;
-
+import java.io.Serializable;
 
 import javafx.scene.media.Media;
 
-public class Video {
+public class Video implements Serializable{
+
+	private static final long serialVersionUID = 1;
 	private Media media;
 	private String name;
 	private String size;

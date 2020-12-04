@@ -8,6 +8,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
+import exceptions.NotFoundException;
 import exceptions.UserAlreadyExistsException;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -31,6 +32,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -60,6 +62,13 @@ public class GUI_MP3 {
 	public GUI_MP3(Manager m, Stage primary){
 		manager = m;
 		primaryStage = primary;
+		try {
+			manager.loadData();
+		} catch (ClassNotFoundException | IOException e) {
+			new Alert(Alert.AlertType.ERROR, "Can't load the data").showAndWait();
+		} catch (NotFoundException e) {
+			new Alert(Alert.AlertType.ERROR, "No files created yet").showAndWait();
+		}
 	}
 	boolean isPlaying = false;
 
@@ -68,10 +77,10 @@ public class GUI_MP3 {
 
 	@FXML
 	private Slider slider;
-	
+
 	@FXML
 	private Slider seekSlider;
-	
+
 	@FXML
 	private BorderPane mainPane;
 
@@ -218,6 +227,7 @@ public class GUI_MP3 {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Register");
 			alert.setHeaderText(info);
+			manager.saveData("users");
 			alert.setContentText("Account created!");
 			alert.showAndWait();
 			changed = true;
@@ -225,6 +235,8 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"You should enter a integer number in the time field").showAndWait();
 		} catch (UserAlreadyExistsException e) {
 			new Alert(Alert.AlertType.ERROR,e.getMessage()).showAndWait();
+		} catch (IOException e) {
+			new Alert(Alert.AlertType.ERROR, "Can't save the data").showAndWait();
 		}
 
 		if (changed) {
@@ -249,17 +261,29 @@ public class GUI_MP3 {
 	@FXML
 	void loadLogin(ActionEvent event) {
 		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("userView.fxml"));
-			fxmlLoader.setController(this);    	
-			Parent root = fxmlLoader.load();
-			Stage mainStage = new Stage();
-			Scene scene = new Scene(root);
-			mainStage.setScene(scene);
-			mainStage.setTitle("My Way");
-			currentStage.close();
-			mainStage.show();
+			int id = Integer.parseInt(txtId.getText());
+			if (manager.userExists(id)) {
+				if (manager.searchUser(id).getPassWord().equals(txtPassword.getText())) {
+					new Alert(Alert.AlertType.CONFIRMATION, "Welcome " + manager.searchUser(id).getName() + "!").showAndWait();
+					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("userView.fxml"));
+					fxmlLoader.setController(this);    	
+					Parent root = fxmlLoader.load();
+					Stage mainStage = new Stage();
+					Scene scene = new Scene(root);
+					mainStage.setScene(scene);
+					mainStage.setTitle("My Way");
+					currentStage.close();
+					mainStage.show();
+				}
+				else {
+					new Alert(Alert.AlertType.ERROR, "Incorrect password").showAndWait();
+				}
+			}
+
 		} catch (IOException e) {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
+		} catch (NumberFormatException e) {
+			new Alert(Alert.AlertType.ERROR,"You should enter a integer number in the time field").showAndWait();
 		}
 	}
 
@@ -286,7 +310,7 @@ public class GUI_MP3 {
 			if (!isPlaying) {
 				mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
 				slider.setValue(mp.getVolume() * 100);
-				
+
 				slider.valueProperty().addListener(new InvalidationListener() {
 
 					@Override
@@ -357,7 +381,9 @@ public class GUI_MP3 {
 	void next(ActionEvent event) {
 		if (mp != null) {
 			if (manager.getSongPlaying().getNextSong() != null) {
+				mp.stop();
 				mp = new MediaPlayer(manager.getSongPlaying().getNextSong().getMedia());
+				manager.setSongPlaying(manager.getSongPlaying().getNextSong());
 				mp.play();
 			}	
 		}
@@ -367,10 +393,22 @@ public class GUI_MP3 {
 	void previous(ActionEvent event) {
 		if (mp != null) {
 			if (manager.getSongPlaying().getPrevSong() != null) {
+				mp.stop();
 				mp = new MediaPlayer(manager.getSongPlaying().getPrevSong().getMedia());
+				manager.setSongPlaying(manager.getSongPlaying().getPrevSong());
 				mp.play();
 			}	
 		}
+	}
+
+	@FXML
+	void removePlaylist(ActionEvent event) {
+
+	}
+
+	@FXML
+	void searchPlaylist(InputMethodEvent event) {
+
 	}
 
 	private void addMedia(Playlist selected) {
@@ -381,6 +419,11 @@ public class GUI_MP3 {
 		path.replace("\\", "/");
 		try {
 			selected.addSong(path);
+			try {
+				manager.saveData("song");
+			} catch (IOException e) {
+				new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
+			}
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
@@ -395,6 +438,11 @@ public class GUI_MP3 {
 		path.replace("\\", "/");
 		try {
 			selected.addVideo(path);
+			try {
+				manager.saveData("video");
+			} catch (IOException e) {
+				new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
+			}
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 				| InvalidAudioFrameException e) {
 			e.printStackTrace();
@@ -436,6 +484,11 @@ public class GUI_MP3 {
 			}
 			else {
 				manager.addPlaylist(txtPlaylistName.getText(), "MP4");
+				try {
+					manager.saveData("play");
+				} catch (IOException e) {
+					new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
+				}
 				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
 				initializePlaylistsGroupView();
 			}
@@ -446,6 +499,11 @@ public class GUI_MP3 {
 			}
 			else {
 				manager.addPlaylist(txtPlaylistName.getText());
+				try {
+					manager.saveData("play");
+				} catch (IOException e) {
+					new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
+				}
 				new Alert(Alert.AlertType.INFORMATION,"Playlist created!").showAndWait();
 				initializePlaylistsGroupView();
 			}
