@@ -3,12 +3,9 @@ package model;
 import java.io.File;
 import java.io.Serializable;
 
-import javafx.scene.media.Media;
-
 public class Video implements Serializable{
 
 	private static final long serialVersionUID = 1;
-	private Media media;
 	private String name;
 	private String size;
 	private boolean isPlaying;
@@ -19,21 +16,9 @@ public class Video implements Serializable{
 	
 	public Video(String path) {
 		File file = new File(path);
-		filePath = file.toURI().toString();
-		media = new Media(filePath);
 		name = file.getName();
 		sizing = file.length()/1048576;
 		size = sizing + " MB";
-		
-		
-	}
-
-	public Media getMedia() {
-		return media;
-	}
-
-	public void setMedia(Media media) {
-		this.media = media;
 	}
 
 	public String getName() {

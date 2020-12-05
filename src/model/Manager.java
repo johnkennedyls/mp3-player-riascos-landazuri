@@ -13,6 +13,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+
 import exceptions.NotFoundException;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserDoesNotExistsException;
@@ -21,28 +26,38 @@ public class Manager implements Serializable{
 
 	private static final long serialVersionUID = 1;
 	private Song songPlaying;
-	private List<Playlist> playlists;
 	private List<User> users;
-	
+	private int current;
+
 	private final static String SAVE_PATH_FILE_USERS = "data/users.xd";
-	private final static String SAVE_PATH_FILE_PLAYLISTS = "data/playlists.xd";
-	private final static String SAVE_PATH_FILE_SONGS = "data/songs.xd";
-	private final static String SAVE_PATH_FILE_VIDEOS = "data/videos.xd";
-	
-	public Manager() {
-		playlists = new ArrayList<>();
+
+	public Manager() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {	
 		users = new ArrayList<>();
-	}
-	
-	public void addPlaylist(String name) {
-		playlists.add(new Playlist(name));
+//		users.add(new User("Julian", "julian@gmail.com","1234",123));
+//		users.get(0).addPlaylist("Songs");
+//		users.get(0).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
+//		users.get(0).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
+//		users.get(0).addPlaylist("Videos", "MP4");
+//		users.get(0).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
+//		users.get(0).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
+//		users.add(new User("Juan Manuel", "seyerman@gmail.com","1234",456));
+//		users.get(1).addPlaylist("Songs");
+//		users.get(1).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
+//		users.get(1).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
+//		users.get(1).addPlaylist("Videos", "MP4");
+//		users.get(1).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
+//		users.get(1).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
+//		users.add(new User("Gallo", "gallo@gmail.com","1234",789));
+//		users.get(2).addPlaylist("Songs");
+//		users.get(2).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
+//		users.get(2).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
+//		users.get(2).addPlaylist("Videos", "MP4");
+//		users.get(2).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
+//		users.get(2).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
+//		saveData();
 	}
 
-	public void addPlaylist(String name, String content) {
-		playlists.add(new Playlist(name, content));
-	}
-	
-	public String addUser(String na, String em, String pass, int id) throws UserAlreadyExistsException {
+	public String addUser(String na, String em, String pass, int id) throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		String info = "";
 		if (users.isEmpty()) {
 			users.add(new User(na, em, pass, id));
@@ -61,13 +76,13 @@ public class Manager implements Serializable{
 		boolean found = false;
 		int start = 0;
 		int end = users.size() - 1;
-		
+
 		List<User> clon = new ArrayList<>();
-		
+
 		for (int i = 0; i < users.size(); i++) {
 			clon.add(users.get(i));
 		}
-		
+
 		class SortUsers implements Comparator<User>{
 			@Override
 			public int compare(User o1, User o2) {
@@ -77,51 +92,97 @@ public class Manager implements Serializable{
 			}
 		}
 		Collections.sort(users, new SortUsers());
-		
+
 		while(start <= end && !found ) {	
-			int medio = ( start + end ) / 2;
-			if(users.get(medio).getId() == id )
+			int middle = ( start + end ) / 2;
+			if(users.get(middle).getId() == id )
 				found = true;
-			else if(users.get(medio).getId() > id )
-				end = medio - 1;
+			else if(users.get(middle).getId() > id )
+				end = middle - 1;
 			else
-				start = medio + 1;
+				start = middle + 1;
 		}
-		
+
 		users = clon;
 		return found;
 	}
-	
+
 	public User searchUser(int id) {
 		User searched = null;
 		boolean found = false;
 		int start = 0;
 		int end = users.size() - 1;
-		
+
 		Object[] toSort =  users.toArray();
-		
+
 		Arrays.sort(toSort);
-		
+
 		users.clear();
-		
+
 		for (int i = 0; i < toSort.length; i++) {
 			users.add((User)toSort[i]);
 		}
-		
+
 		while(start <= end && !found ) {	
-			int medio = ( start + end ) / 2;
-			if(users.get(medio).getId() == id ) {
+			int middle = ( start + end ) / 2;
+			if(users.get(middle).getId() == id ) {
 				found = true;
-				searched = users.get(medio);
+				searched = users.get(middle);
 			}
-			else if(users.get(medio).getId() > id )
-				end = medio - 1;
+			else if(users.get(middle).getId() > id )
+				end = middle - 1;
 			else
-				start = medio + 1;
+				start = middle + 1;
 		}
 		return searched;
 	}
-	
+
+	public int userPosition(int id) {
+		boolean found = false;
+		int start = 0;
+		int end = users.size() - 1;
+		int middle = 0;
+
+		List<User> clon = new ArrayList<>();
+
+		for (int i = 0; i < users.size(); i++) {
+			clon.add(users.get(i));
+		}
+
+		users = burbleSort(users); 
+
+		while(start <= end && !found ) {	
+			middle = ( start + end ) / 2;
+			if(users.get(middle).getId() == id ) {
+				found = true;
+			}
+			else if(users.get(middle).getId() > id )
+				end = middle - 1;
+			else
+				start = middle + 1;
+		}
+
+		users = clon;
+
+		return middle;
+	}
+
+	public List<User> burbleSort(List<User> users) {
+		User current;
+		List<User> sorted;
+		for(int i = 2; i < users.size(); i++){
+			for(int j = 0;j < users.size()-i;j++){
+				if(users.get(j).getId() > users.get(j+1).getId()){
+					current = users.get(j+1);
+					users.set(j+1, users.get(j));
+					users.set(j, current);
+				}   
+			}
+		}
+		sorted = users;
+		return sorted;
+	}
+
 	public String removeUser(int id) throws UserDoesNotExistsException{
 		String info = "";
 		User user = searchUser(id);
@@ -132,40 +193,16 @@ public class Manager implements Serializable{
 			throw new UserDoesNotExistsException();
 		return info;
 	}
-	
-	public void saveData(String type) throws IOException{
-		if(type.equalsIgnoreCase("users")) {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_USERS));
-			oos.writeObject(users);
-			oos.close();
-		} 
-		if(type.equalsIgnoreCase("play")) {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_PLAYLISTS));
-			oos.writeObject(playlists);
-			oos.close();
-		}
-		if(type.equalsIgnoreCase("song")) {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_SONGS));
-			for (int i = 0; i < playlists.size(); i++) {
-				oos.writeObject(playlists.get(i).getFirstSong());
-			}
-			oos.close();
-		} 
-		if(type.equalsIgnoreCase("video")) {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_VIDEOS));
-			for (int i = 0; i < playlists.size(); i++) {
-				oos.writeObject(playlists.get(i).getFirstVideo());
-			}
-			oos.close();
-		}
+
+	public void saveData() throws IOException{
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_USERS));
+		oos.writeObject(users);
+		oos.close();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String loadData() throws IOException, ClassNotFoundException, NotFoundException{
 		File u = new File(SAVE_PATH_FILE_USERS);
-		File p = new File(SAVE_PATH_FILE_PLAYLISTS);
-		File ps = new File(SAVE_PATH_FILE_SONGS);
-		File pv = new File(SAVE_PATH_FILE_VIDEOS);
 		String info = "";
 		boolean loaded = false;
 		if(u.exists()){
@@ -177,57 +214,30 @@ public class Manager implements Serializable{
 		else {
 			throw new NotFoundException();
 		}
-		if(p.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(p));
-			playlists = (List<Playlist>)ois.readObject();
-			ois.close();
-			loaded = true;
-		}
-		else {
-			throw new NotFoundException();
-		}
-		if(ps.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ps));
-			for (int i = 0; i < playlists.size(); i++) {
-				Song firstSong = (Song)ois.readObject();
-				playlists.get(i).setFirstSong(firstSong); 
-			}
-			ois.close();	
-		}
-		else {
-			throw new NotFoundException();
-		}
-		if(pv.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(pv));
-			for (int i = 0; i < playlists.size(); i++) {
-				Video firstVideo = (Video)ois.readObject();
-				playlists.get(i).setFirstVideo(firstVideo); 
-			}
-			ois.close();
-		}
-		else {
-			throw new NotFoundException();
-		}
 		if (!loaded) {
 			info += "Nothing to load";
 		}
 		return info;
 	}
-	
+
 	public List<User> getUsers() {
 		return users;
-	}
-	
-	public List<Playlist> getPlaylists() {
-		return playlists;
 	}
 
 	public Song getSongPlaying() {
 		return songPlaying;
 	}
-	
+
 	public void setSongPlaying(Song song) {
 		songPlaying = song;
+	}
+
+	public int getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(int current) {
+		this.current = current;
 	}
 
 }

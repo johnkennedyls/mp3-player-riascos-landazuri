@@ -1,6 +1,14 @@
 package model;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 
 public class User implements Comparable<User>, Serializable{
 
@@ -9,12 +17,14 @@ public class User implements Comparable<User>, Serializable{
 	private String email;
 	private String passWord;
 	private int id;
+	private List<Playlist> playlists;
 	
-	public User(String na, String em, String pass, int ide) {
+	public User(String na, String em, String pass, int ide) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		name = na;
 		email = em;
 		passWord = pass;
 		id = ide;
+		playlists = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -31,6 +41,22 @@ public class User implements Comparable<User>, Serializable{
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void addPlaylist(String name) {
+		playlists.add(new Playlist(name));
+	}
+
+	public void addPlaylist(String name, String content) {
+		playlists.add(new Playlist(name, content));
+	}
+
+	public List<Playlist> getPlaylists() {
+		return playlists;
+	}
+
+	public void setPlaylists(List<Playlist> playlists) {
+		this.playlists = playlists;
 	}
 
 	@Override

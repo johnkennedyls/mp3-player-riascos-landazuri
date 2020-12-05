@@ -36,6 +36,7 @@ import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -49,7 +50,7 @@ import model.Video;
 
 public class GUI_MP3 {
 
-	private Manager manager = new Manager();
+	private Manager manager;
 
 	private MP4Controller mp4Con;
 
@@ -59,7 +60,7 @@ public class GUI_MP3 {
 
 	private Playlist temp;
 
-	public GUI_MP3(Manager m, Stage primary){
+	public GUI_MP3(Manager m, Stage primary) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
 		manager = m;
 		primaryStage = primary;
 		try {
@@ -160,7 +161,7 @@ public class GUI_MP3 {
 	}
 
 	private void initializePlaylistsGroupView() {
-		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getPlaylists());
+		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists());
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
 		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content")); 
@@ -223,11 +224,12 @@ public class GUI_MP3 {
 		boolean changed = false;
 
 		try {
-			String info = manager.addUser(txtName.getText(), txtEmail.getText(), txtPassword.getText(), Integer.parseInt(txtId.getText()));
+			String info;
+			info = manager.addUser(txtName.getText(), txtEmail.getText(), txtPassword.getText(), Integer.parseInt(txtId.getText()));
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Register");
 			alert.setHeaderText(info);
-			manager.saveData("users");
+			manager.saveData();
 			alert.setContentText("Account created!");
 			alert.showAndWait();
 			changed = true;
@@ -237,6 +239,8 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,e.getMessage()).showAndWait();
 		} catch (IOException e) {
 			new Alert(Alert.AlertType.ERROR, "Can't save the data").showAndWait();
+		} catch (CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+			e.printStackTrace();
 		}
 
 		if (changed) {
@@ -264,6 +268,7 @@ public class GUI_MP3 {
 			int id = Integer.parseInt(txtId.getText());
 			if (manager.userExists(id)) {
 				if (manager.searchUser(id).getPassWord().equals(txtPassword.getText())) {
+					manager.setCurrent(id);
 					new Alert(Alert.AlertType.CONFIRMATION, "Welcome " + manager.searchUser(id).getName() + "!").showAndWait();
 					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("userView.fxml"));
 					fxmlLoader.setController(this);    	
@@ -274,6 +279,7 @@ public class GUI_MP3 {
 					mainStage.setTitle("My Way");
 					currentStage.close();
 					mainStage.show();
+					initializePlaylistsGroupView();
 				}
 				else {
 					new Alert(Alert.AlertType.ERROR, "Incorrect password").showAndWait();
@@ -308,7 +314,7 @@ public class GUI_MP3 {
 		if (tvPlaylist.getSelectionModel().getSelectedItem() != null) {
 			manager.setSongPlaying(tvPlaylist.getSelectionModel().getSelectedItem());
 			if (!isPlaying) {
-				mp = new MediaPlayer(tvPlaylist.getSelectionModel().getSelectedItem().getMedia());
+				mp = new MediaPlayer(new Media(new File(tvPlaylist.getSelectionModel().getSelectedItem().getPath()).toURI().toString()));
 				slider.setValue(mp.getVolume() * 100);
 
 				slider.valueProperty().addListener(new InvalidationListener() {
@@ -382,7 +388,7 @@ public class GUI_MP3 {
 		if (mp != null) {
 			if (manager.getSongPlaying().getNextSong() != null) {
 				mp.stop();
-				mp = new MediaPlayer(manager.getSongPlaying().getNextSong().getMedia());
+				mp = new MediaPlayer(new Media(new File(tvPlaylist.getSelectionModel().getSelectedItem().getPath()).toURI().toString()));
 				manager.setSongPlaying(manager.getSongPlaying().getNextSong());
 				mp.play();
 			}	
@@ -394,7 +400,7 @@ public class GUI_MP3 {
 		if (mp != null) {
 			if (manager.getSongPlaying().getPrevSong() != null) {
 				mp.stop();
-				mp = new MediaPlayer(manager.getSongPlaying().getPrevSong().getMedia());
+				mp = new MediaPlayer(new Media(new File(tvPlaylist.getSelectionModel().getSelectedItem().getPath()).toURI().toString()));
 				manager.setSongPlaying(manager.getSongPlaying().getPrevSong());
 				mp.play();
 			}	
@@ -420,7 +426,7 @@ public class GUI_MP3 {
 		try {
 			selected.addSong(path);
 			try {
-				manager.saveData("song");
+				manager.saveData();
 			} catch (IOException e) {
 				new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
 			}
@@ -439,7 +445,7 @@ public class GUI_MP3 {
 		try {
 			selected.addVideo(path);
 			try {
-				manager.saveData("video");
+				manager.saveData();
 			} catch (IOException e) {
 				new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
 			}
@@ -483,9 +489,9 @@ public class GUI_MP3 {
 				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
 			}
 			else {
-				manager.addPlaylist(txtPlaylistName.getText(), "MP4");
+				manager.getUsers().get(manager.userPosition(manager.getCurrent())).addPlaylist(txtPlaylistName.getText(), "MP4");
 				try {
-					manager.saveData("play");
+					manager.saveData();
 				} catch (IOException e) {
 					new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
 				}
@@ -498,9 +504,9 @@ public class GUI_MP3 {
 				new Alert(Alert.AlertType.WARNING,"You should give it a name").showAndWait();
 			}
 			else {
-				manager.addPlaylist(txtPlaylistName.getText());
+				manager.getUsers().get(manager.userPosition(manager.getCurrent())).addPlaylist(txtPlaylistName.getText());
 				try {
-					manager.saveData("play");
+					manager.saveData();
 				} catch (IOException e) {
 					new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
 				}
@@ -513,9 +519,9 @@ public class GUI_MP3 {
 	@FXML
 	void showContent(MouseEvent event) {
 		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
-		for (int i = 0; i < manager.getPlaylists().size(); i++) {
-			if (temp == manager.getPlaylists().get(i)) {
-				if (manager.getPlaylists().get(i).getContent().equals("MP3")) {
+		for (int i = 0; i < manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists().size(); i++) {
+			if (temp == manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists().get(i)) {
+				if (manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists().get(i).getContent().equals("MP3")) {
 					if (event.getButton()==MouseButton.PRIMARY) {
 						try {
 							FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("songsTable.fxml"));
@@ -528,7 +534,7 @@ public class GUI_MP3 {
 						}
 					}
 					else if (event.getButton()==MouseButton.SECONDARY) {
-						addMedia(manager.getPlaylists().get(i));
+						addMedia(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists().get(i));
 						initializeSongsView(temp);
 					}
 				}
@@ -545,7 +551,7 @@ public class GUI_MP3 {
 						}
 					}
 					else if (event.getButton()==MouseButton.SECONDARY) {
-						addVideo(manager.getPlaylists().get(i));
+						addVideo(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists().get(i));
 						initializeVideosView(temp);
 					}
 				}
