@@ -1,5 +1,10 @@
 package model;
 
+
+import java.io.FileNotFoundException;
+
+import java.io.PrintWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -231,6 +237,43 @@ public class Manager implements Serializable{
 	public void setSongPlaying(Song song) {
 		songPlaying = song;
 	}
+	
+	
+	
+	public String toStringUsers() {
+		String msg = "Users List: \n ";
+		for(User user : users) {
+			msg += user.toString();
+		}
+		return msg;
+	}
+
+	public String toStringPlaylists() {
+		String msg = "Playlists List: \n ";
+		for(Playlist playlist : users.get(current).getPlaylists()) {
+			msg += playlist.toString();
+		}
+		return msg;
+	}
+	
+	public void exportPlayListsData(String fileName) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(fileName);
+		for (int i = 0; i < users.get(current).getPlaylists().size(); i++) {
+			Playlist myPlaylist = users.get(current).getPlaylists().get(i);			
+			pw.println(myPlaylist.toString());
+		}
+		pw.close();
+	}
+	
+	public void exportUsersData(String fileName) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(fileName);
+		for (int i = 0; i < users.size(); i++) {
+			User myUser = users.get(i);			
+			pw.println(myUser.toString());
+		}
+		pw.close();
+	}
+	
 
 	public int getCurrent() {
 		return current;

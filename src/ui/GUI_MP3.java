@@ -1,7 +1,10 @@
 package ui;
 
 import java.io.File;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -156,6 +159,11 @@ public class GUI_MP3 {
 
 	@FXML
 	private TableColumn<Video, String> tcDurationV;
+	
+	@FXML
+    private TextField txtNameFileToExport;
+
+   
 
 	public void initialize() {
 	}
@@ -576,6 +584,52 @@ public class GUI_MP3 {
 		} catch (IOException e) {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
+	}
+	
+	 @FXML
+	    void exportData(ActionEvent event) {
+		 
+		 String fileName = txtNameFileToExport.getText();
+			try {
+				manager.exportPlayListsData(fileName + "PlayLists.csv");
+				manager.exportUsersData(fileName+"Users.csv");
+				new Alert(Alert.AlertType.INFORMATION,"Playlists and users exported").showAndWait();
+			} catch (FileNotFoundException e) {
+				new Alert(Alert.AlertType.ERROR,"Can't export data, verify your configuration please").showAndWait();
+				e.printStackTrace();
+			}
+			
+		    
+	    }
+	 
+	  @FXML
+	    void exportUserView(ActionEvent event) {
+		  initFXMLToExportData();
+	    }
+
+	private void initFXMLToExportData() {
+		 try {
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportData.fxml"));
+				fxmlLoader.setController(this);
+				Parent root = fxmlLoader.load();
+				Stage mainStage = new Stage();
+				mainStage.initModality(Modality.APPLICATION_MODAL);
+				Scene scene = new Scene(root);
+				mainStage.setScene(scene);
+				mainStage.setTitle("Give me fle name to export :v");
+				mainStage.show();
+				btnCancel.setOnAction(
+						new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent event) {
+								mainStage.close();
+							}
+						});	
+				
+			} catch (IOException e) {
+				new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
+			}
+		
 	}
 
 }

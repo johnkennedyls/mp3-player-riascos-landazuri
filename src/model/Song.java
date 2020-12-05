@@ -91,4 +91,11 @@ public class Song implements Serializable{
 		this.path = path;
 	}
 	
+	public String toString() {
+		String msg = "";
+		String separator = ", ";
+		msg = title + separator + artist + separator + album;
+		return msg;
+	}
+	
 }

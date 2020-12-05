@@ -228,5 +228,33 @@ public class Playlist implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	public String toString() {
+		String msg = "PlayList " + name + ": \n";
+		if(content == "") {
+			msg += toStringSongs();
+		}else {
+			msg += toStringVideos();
+		}
+		return msg;
+	}
 	
+	public String toStringSongs() {
+		String msg = "Song List: \n";
+		for(Song song : playlist) {
+			msg += song.toString();
+		}
+		return msg;
+	}
+	
+	public String toStringVideos() {
+		String msg = "Video List: \n";
+		for(Video video : playlistV) {
+			msg += video.toString();
+		}
+	
+		return msg;
+	}
+
 }
