@@ -11,10 +11,10 @@ public class NewSearchThread extends Thread{
 	private String searched;
 	
 	/**
-	 * This is the constructor of NewSearchThread
-	 * @param manager is the controller class
-	 * @param gmp3 is the GUI controller class
-	 * @param s is the name of the playlist searched
+	 * Este es el constructor de newSearchThread
+	 * @param manager es la controladora del modelo
+	 * @param gmp3 es la controladora de la GUI
+	 * @param s es el nombre del la playlist que se busca
 	 */
 	public NewSearchThread(Manager manager, GUI_MP3 gmp3, String s) {
 		setDaemon(true);
@@ -24,7 +24,7 @@ public class NewSearchThread extends Thread{
 	}
 
 	/**
-	 * This method is the action of the thread. This thread actualize the table view with the playlist searched by name
+	 * Este metodo es la accion del hilo. Este hilo busca una playlist y renueva la TableView de playlists
 	 */
 	public void run() {
 		Platform.runLater(new Thread() {

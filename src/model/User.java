@@ -16,6 +16,13 @@ public class User implements Comparable<User>, Serializable{
 	private User sonL;
 	private User sonR;
 	
+	/**
+	 * Constructor de la clase que representa al usuario.
+	 * @param na:String nombre del usuario.
+	 * @param em:String email del usuario.
+	 * @param pass:String password del usuario.
+	 * @param ide:int número de identidad del usuario.
+	 */
 	public User(String na, String em, String pass, int ide) {
 		name = na;
 		email = em;
@@ -58,6 +65,12 @@ public class User implements Comparable<User>, Serializable{
 	public int getId() {
 		return id;
 	}
+
+/**
+ * Se encarga de parametrizar la ubicación del objeto en una lista.
+ * @return ubicación relativa en la lista.
+ */
+
 	
 	public List<Playlist> getPlaylists() {
 		return playlists;
@@ -91,6 +104,7 @@ public class User implements Comparable<User>, Serializable{
 		this.numPlaylists = numPlaylists;
 	}
 
+
 	@Override
 	public int compareTo(User user) {
 		int comp;
@@ -103,7 +117,10 @@ public class User implements Comparable<User>, Serializable{
 		}
 		return comp;
 	}
-	
+	/**
+	 * Retorna el estado del usuario.
+	 * return msg:String estado del usuario.
+	 */
 	public String toString() {
 		String msg = "";
 		String separator = ";";

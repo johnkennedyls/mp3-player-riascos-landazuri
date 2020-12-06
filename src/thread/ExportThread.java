@@ -12,9 +12,9 @@ public class ExportThread extends Thread{
 	private String fileName;
 	
 	/**
-	 * This is the constructor of ExportThread
-	 * @param manager is the controller class
-	 * @param s is the file name of the file to export
+	 * Este es el constructor de ExportThread
+	 * @param manager es la clase controladora
+	 * @param s es el nombre del archivo a exportar
 	 */
 	public ExportThread(Manager manager, String s) {
 		setDaemon(true);
@@ -23,7 +23,7 @@ public class ExportThread extends Thread{
 	}
 
 	/**
-	 * This method is the action of the thread. This thread exports users and playlists data.
+	 * Este metodo es la accion del hilo. Este hilo exporta la informacion de las playlists de un usuario especifico y los usuarios registrados en el programa
 	 */
 	public void run() {
 		Platform.runLater(new Thread() {

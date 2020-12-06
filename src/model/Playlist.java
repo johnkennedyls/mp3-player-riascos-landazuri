@@ -23,19 +23,34 @@ public class Playlist implements Serializable{
 	private Video firstVideo;
 	private List<Song> playlist;
 	private List<Video> playlistV;
-
+/**
+ * Representa una lista de canciones
+ * @param na: String nombre de la lista.
+ */
 	public Playlist(String na) {
 		name = na;
 		playlist = new ArrayList<>();
 		content = "MP3";
 	}
-
+/**
+ * Representa una lista de videos
+ * @param na: String nombre de la lista
+ * @param cont: String nombre del tipo de archivo(MP4)
+ */
 	public Playlist(String na, String cont) {
 		name = na;
 		content = cont;
 		playlistV = new ArrayList<>();
 	}
-
+/**
+ * Añade una canción a la lista.
+ * @param path:String ruta de la canción
+ * @throws CannotReadException
+ * @throws IOException
+ * @throws TagException
+ * @throws ReadOnlyFileException
+ * @throws InvalidAudioFrameException
+ */
 	public void addSong(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		Song newSong = new Song(path);
 		if(firstSong==null) {
@@ -45,6 +60,11 @@ public class Playlist implements Serializable{
 			recursiveAddSong(firstSong, newSong);
 		}
 	}
+	/**
+	 * Añade una canción de forma recursiva.
+	 * @param current: canción actual.
+	 * @param newSong: nueva canción.
+	 */
 
 	private void recursiveAddSong(Song current, Song newSong) {
 		if (current.getNextSong() != null) {
@@ -57,7 +77,15 @@ public class Playlist implements Serializable{
 			playlist();
 		}
 	}
-
+	/**
+	 * Añade un video a la lista.
+	 * @param path:String ruta del video.
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
 	public void addVideo(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		Video newVideo = new Video(path);
 		if(firstVideo==null) {
@@ -67,6 +95,12 @@ public class Playlist implements Serializable{
 			recursiveAddVideo(firstVideo, newVideo);
 		}
 	}
+	/**
+	 * Añade un video de forma recursiva.
+	 * @param current: video actual.
+	 * @param newSong: nuevo video.
+	 */
+
 
 	private void recursiveAddVideo(Video current, Video newVideo) {
 		if (current.getNextVideo() != null) {
@@ -79,7 +113,12 @@ public class Playlist implements Serializable{
 			playlistV();
 		}
 	}	
-
+/**
+ * Busca una  canción en la lista
+ * @param c, nombre a buscar.
+ * @return found:Song la canción buscada.
+ * @throws NotFoundException
+ */
 	public Song searchSong(String c) throws NotFoundException {
 		Song found =recursiveSearchSong(firstSong, c);
 		if (found == null) {
@@ -87,7 +126,12 @@ public class Playlist implements Serializable{
 		}
 		return found;
 	}
-
+/**
+ * Busca canciones de forma recursiva.
+ * @param current: canción actual en la lista.
+ * @param c:nombre a buscar;
+ * @return found:Song la canción buscada.
+ */
 	private Song recursiveSearchSong(Song current, String c) {
 		Song found = null;
 		if (current != null) {
@@ -100,12 +144,22 @@ public class Playlist implements Serializable{
 		}	
 		return found;
 	}
-
+	/**
+	 * Busca un  video en la lista
+	 * @param c, nombre a buscar.
+	 * @return found:Video video buscado.
+	 * @throws NotFoundException
+	 */
 	public Video searchVideo(String c) {
 		Video found = recursiveSearchVideo(firstVideo, c);
 		return found;
 	}
-
+	/**
+	 * Busca videos de forma recursiva.
+	 * @param current: video actual en la lista.
+	 * @param c:nombre a buscar;
+	 * @return found:Video video buscado.
+	 */
 	private Video recursiveSearchVideo(Video current, String c) {
 		Video found = null;
 		if (current != null) {
@@ -118,7 +172,11 @@ public class Playlist implements Serializable{
 		}	
 		return found;
 	}
-
+/**
+ * Elimina una canción.
+ * @param c:String Canción a eliminar
+ * @return b:Song canción eliminada.
+ */
 	public Song removeSong(String c) {
 		Song b = null;
 
@@ -142,7 +200,11 @@ public class Playlist implements Serializable{
 
 		return b;
 	}
-
+	/**
+	 * Elimina un video.
+	 * @param c:String video a eliminar
+	 * @return b:Video video eliminado.
+	 */
 	public Video removeVideo(String c) {
 		Video b = null;
 
@@ -166,7 +228,10 @@ public class Playlist implements Serializable{
 
 		return b;
 	}
-
+/**
+ * Verifica que la lista sea de canciones y la guarda.
+ * 
+ */
 	public void playlist(){
 		playlist.clear();
 		Song song = firstSong;
@@ -175,7 +240,10 @@ public class Playlist implements Serializable{
 			song = song.getNextSong();
 		}
 	}
-
+	/**
+	 * Verifica que la lista sea de videos y la guarda.
+	 * 
+	 */
 	public void playlistV(){
 		playlistV.clear();
 		Video video = firstVideo;
@@ -229,7 +297,10 @@ public class Playlist implements Serializable{
 		this.name = name;
 	}
 
-
+	/**
+	 * Retorna el estado de la lista.
+	 * return msg:String estado de la lista.
+	 */
 	public String toString() {
 		String msg = "PlayList " + name + "\n";
 		if(content.equals("MP3")) {
@@ -239,6 +310,13 @@ public class Playlist implements Serializable{
 		}
 		return msg;
 	}
+
+	/**
+	 * Retorna el estado de las cancioneso.
+	 * return msg:String estado de las canciones.
+	 */
+
+
 
 	public String toStringSongs() {
 		String msg = "";
@@ -251,6 +329,12 @@ public class Playlist implements Serializable{
 		}
 		return msg;
 	}
+
+	/**
+	 * Retorna el estado de los videos.
+	 * return msg:String estado de los videos.
+	 */
+
 
 	public String toStringVideos() {
 		String msg = "";

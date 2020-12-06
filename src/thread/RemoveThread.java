@@ -13,10 +13,10 @@ public class RemoveThread extends Thread{
 	private Playlist searched;
 	
 	/**
-	 * This is the constructor of RemoveThread
-	 * @param manager is the controller class
-	 * @param gmp3 is the GUI controller class
-	 * @param s is the playlist to remove
+	 * Este método es el constructor de RemoveThread
+	 * @param manager es la clase controladora del modelo
+	 * @param gmp3 es la clase controladora de la GUI
+	 * @param s es la playlist a remover
 	 */
 	public RemoveThread(Manager manager, GUI_MP3 gmp3, Playlist s) {
 		setDaemon(true);
@@ -26,7 +26,7 @@ public class RemoveThread extends Thread{
 	}
 
 	/**
-	 * This method is the action of the thread. This thread removes a playlist from the arraylist of playlist of the current user
+	 * Este metodo es la acción del hilo. Este hilo elimina una playlist del arraylist de playlist
 	 */
 	public void run() {
 		Platform.runLater(new Thread() {

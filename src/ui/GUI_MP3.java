@@ -1,7 +1,7 @@
 package ui;
 
 import java.io.File;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -57,7 +57,7 @@ import model.Moon;
 import model.Playlist;
 import model.Song;
 import model.Video;
-import thread.ExportThread;
+//import thread.ExportThread;
 import thread.NewSearchThread;
 import thread.RemoveThread;
 
@@ -665,19 +665,30 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
-	@FXML
-	void exportData(ActionEvent event) {
-		String fileName = txtNameFileToExport.getText();
-		ExportThread et = new ExportThread(manager, fileName);
-		et.start();
-	}
+	
+	 @FXML
+	    void exportData(ActionEvent event) {
+		 
+		 String fileName = txtNameFileToExport.getText();
+			try {
+				manager.exportPlayListsData("data/"+fileName + "PlayLists.csv");
+				manager.exportUsersData("data/"+fileName+"Users.csv");
+				new Alert(Alert.AlertType.INFORMATION,"Playlists and users exported").showAndWait();
+			} catch (FileNotFoundException e) {
+				new Alert(Alert.AlertType.ERROR,"Can't export data, verify your configuration please").showAndWait();
+				e.printStackTrace();
+			}
+			
+		    
+	    }
+	
+	
 
 	@FXML
 	void exportUserView(ActionEvent event) {
 		initFXMLToExportData();
 	}
-
+	
 	private void initFXMLToExportData() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportData.fxml"));

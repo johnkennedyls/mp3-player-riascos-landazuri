@@ -293,4 +293,5 @@ public class Manager implements Serializable{
 		this.current = current;
 	}
 
+
 }

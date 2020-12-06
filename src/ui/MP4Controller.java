@@ -34,8 +34,8 @@ public class MP4Controller implements Initializable {
 	private Slider seekSlider;
 
 	/**
-	 * This method is the constructor of MP4Controller
-	 * @param filePath is the path of the video to reproduce
+	 * Este método es el constructor de MP4Controller
+	 * @param filePath es la ruta del video
 	 */
 	public MP4Controller(String filePath) {
 		Media media = new Media(filePath);
@@ -43,7 +43,7 @@ public class MP4Controller implements Initializable {
 	}
 	
 	/**
-	 * This method initialize the mediaPlayer, configures the window dimensions, volume and slider
+	 * Este método inicializa el MediaPlayer, configura la vista, el volumen y el slider que indica la duración
 	 */
 	private void components() {
 		mediaView.setMediaPlayer(mediaPlayer);
@@ -85,7 +85,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method pauses the video
+	 * Este método pausa el video
 	 * @param event
 	 */
 	@FXML
@@ -94,7 +94,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method resume the video
+	 * Este método reanuda el video
 	 * @param event
 	 */
 	@FXML
@@ -105,7 +105,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method stops the video
+	 * Este método reinicia el video
 	 * @param event
 	 */
 	@FXML
@@ -114,7 +114,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method makes the video goes more fast
+	 * Este metodo hace que el video vaya más rapido
 	 * @param event
 	 */
 	@FXML
@@ -123,7 +123,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method makes the video goes faster
+	 * Este método hace que el video vaya aun mas rapido
 	 * @param event
 	 */
 	@FXML
@@ -132,7 +132,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method makes the video goes slow
+	 * Este método hace que el video vaya más despacio
 	 * @param event
 	 */
 	@FXML
@@ -141,7 +141,7 @@ public class MP4Controller implements Initializable {
 	}
 
 	/**
-	 * This method makes the video goes slower
+	 * Este método hace que el video vaya aún más despacio
 	 * @param event
 	 */
 	@FXML
