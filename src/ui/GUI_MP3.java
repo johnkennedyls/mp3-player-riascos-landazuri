@@ -72,7 +72,16 @@ public class GUI_MP3 {
 	private Stage currentStage;
 
 	private Playlist temp;
-
+/**
+ * Inicializa el programa.
+ * @param m:Manager inicializa la clase principal del modelo.
+ * @param primary: Represanta el stage principal.
+ * @throws CannotReadException
+ * @throws IOException
+ * @throws TagException
+ * @throws ReadOnlyFileException
+ * @throws InvalidAudioFrameException
+ */
 	public GUI_MP3(Manager m, Stage primary) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
 		manager = m;
 		primaryStage = primary;
@@ -236,7 +245,9 @@ public class GUI_MP3 {
 
 	public void initialize() {
 	}
-
+/**
+ * Inicializa la vista de las playlists.
+ */
 	public void initializePlaylistsGroupView() {
 		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists());
 		tvPlaylistsGroup.setItems(observableList);
@@ -244,14 +255,20 @@ public class GUI_MP3 {
 		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content"));
 		numPlaylists.setText(manager.getUsers().get(manager.getCurrent()).getNumPlaylists() + "");
 	}
-
+/**
+ * Inicializa la vista de una lista buscada.
+ * @param searched lista a buscar.
+ */
 	public void initializePlaylistsGroupView(List<Playlist> searched) {
 		ObservableList<Playlist> observableList = FXCollections.observableArrayList(searched);
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
 		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content")); 
 	}
-
+/**
+ * Inicialista la vista de canciones.
+ * @param temp: lista a desplegar o mostrar.
+ */
 	private void initializeSongsView(Playlist temp) {
 		ObservableList<Song> observableList = FXCollections.observableArrayList(temp.getPlaylist());
 		tvPlaylist.setItems(observableList);
@@ -259,6 +276,10 @@ public class GUI_MP3 {
 		tcArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
 		tcAlbum.setCellValueFactory(new PropertyValueFactory<Song,String>("album"));	
 	}
+	/**
+	 * Inicialista la vista de videos.
+	 * @param temp: lista a desplegar o mostrar.
+	 */
 
 	private void initializeVideosView(Playlist temp) {
 		ObservableList<Video> observableList = FXCollections.observableArrayList(temp.getPlaylistV());
@@ -266,7 +287,10 @@ public class GUI_MP3 {
 		tcTitleV.setCellValueFactory(new PropertyValueFactory<Video,String>("name")); 
 		tcSize.setCellValueFactory(new PropertyValueFactory<Video,String>("size"));
 	}
-
+/**
+ * Se encarga de que el usuario pueda ingresar al programa.
+ * @param event: ActionEvent cuando el usuario pulsa el botón
+ */
 	@FXML
 	void logIn(ActionEvent event) {
 		try {
@@ -285,7 +309,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+	/**
+	 * Desplega la pantalla de crear un usuario nuevo.
+	 * @param event:ActionEvent cuando el usuario pulsa el botón
+	 */
 	@FXML
 	void signUp(ActionEvent event) {
 		try {
@@ -303,7 +330,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+/**
+ * Registra al usuario que noestá en la base de datos.
+ * @param event:ActionEvent cuando el usuario pulsa el botón.
+ */
 	@FXML
 	void signUpUser(ActionEvent event) {
 		boolean changed = false;
@@ -346,7 +376,10 @@ public class GUI_MP3 {
 			}
 		}
 	}
-
+	/**
+	 * Carga la pantalla de ingreso de un usuario.
+	 * @param event:ActionEvent cuando el usuario pulsa el botón
+	 */
 	@FXML
 	void loadLogin(ActionEvent event) {
 		try {
@@ -377,7 +410,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"You should enter a integer number in the time field").showAndWait();
 		}
 	}
-
+/**
+ * Se encarga de devolver al usuario a la pantalla principal del programa.
+ * @param event:ActionEvent cuando el usuario pulsa el botón.
+ */
 	@FXML
 	void back(ActionEvent event) {
 		try {
@@ -393,7 +429,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+/**
+ * Se encarga de reproducir una canción que el usuario haya seleccionado.
+ * @param event:MouseEvent cuando el usuario selecciona una canción con el mouse
+ */
 	@FXML
 	void selectSongs(MouseEvent event) {
 		if (tvPlaylist.getSelectionModel().getSelectedItem() != null) {
@@ -431,7 +470,10 @@ public class GUI_MP3 {
 			}
 		}
 	}
-
+/**
+ * Repite una canción en bucle infinito.
+ * @param event:ActionEvent cuando el usuario pulsa el botón.
+ */
 	@FXML
 	void LoopMusic(ActionEvent event) {
 		if (isPlaying == true && mp != null) {
@@ -444,6 +486,10 @@ public class GUI_MP3 {
 		}
 	}
 
+/**
+* Da pausa a una canción.
+* @param event:ActionEvent cuando el usuario pulsa el botón.
+*/
 	@FXML
 	void PauseMusic(ActionEvent event) {
 		if (isPlaying == true && mp != null) {
@@ -452,6 +498,10 @@ public class GUI_MP3 {
 		}
 	}
 
+/**
+* Reproduce una canción.
+* @param event:ActionEvent cuando el usuario pulsa el botón.
+*/
 	@FXML
 	void PlayMusic(ActionEvent event) {
 		if (isPlaying == false && mp != null) {
@@ -460,6 +510,10 @@ public class GUI_MP3 {
 		}
 	}
 
+/**
+*Se encarga de parar una canción y reiniciar el reproductor a cero.
+* @param event:ActionEvent cuando el usuario pulsa el botón.
+*/
 	@FXML
 	void StopMusic(ActionEvent event) {
 		if (mp != null) {
@@ -468,6 +522,10 @@ public class GUI_MP3 {
 		}
 	}
 
+/**
+* Se encarga de reproducir la siguiente canción.
+* @param event:ActionEvent cuando el usuario pulsa el botón.
+*/
 	@FXML
 	void next(ActionEvent event) {
 		if (mp != null) {
@@ -479,7 +537,10 @@ public class GUI_MP3 {
 			}	
 		}
 	}
-
+	/**
+	* Se encarga de reproducir la anterior canción.
+	* @param event:ActionEvent cuando el usuario pulsa el botón.
+	*/
 	@FXML
 	void previous(ActionEvent event) {
 		if (mp != null) {
@@ -491,7 +552,10 @@ public class GUI_MP3 {
 			}	
 		}
 	}
-
+	/**
+	* Elimina una lista.
+	* @param event:ActionEvent cuando el usuario pulsa el botón.
+	*/
 	@FXML
 	void removePlaylist(ActionEvent event) {
 		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
@@ -503,14 +567,20 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
 		}
 	}
-
+	/**
+	* Busca una lista.
+	* @param event:ActionEvent cuando el usuario pulsa el botón.
+	*/
 	@FXML
 	void searchPlaylist(KeyEvent event) {
 		String searched = txtPlaylistSearcher.getText();
 		NewSearchThread nst = new NewSearchThread(manager, this, searched);
 		nst.start();
 	}
-
+/**
+ * Añade una canción a una playlist.
+ * @param selected: Playlist lista de reproducción seleccionada.
+ */
 	private void addMedia(Playlist selected) {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter("Music files", "*.mp3"));
@@ -529,7 +599,10 @@ public class GUI_MP3 {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * Añade un video a una playlist.
+	 * @param selected: Playlist lista de reproducción seleccionada.
+	 */
 	private void addVideo(Playlist selected) {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter("Video files", "*.mp4"));
@@ -548,7 +621,10 @@ public class GUI_MP3 {
 			e.printStackTrace();
 		}
 	}
-
+/**
+ * Se encarga de inicializar la pantalla para pedir el nombre de la nueva lista.
+ * @param event: ActionEvent cuando el usuario pulsa el botón.
+ */
 	@FXML
 	void createNewPlaylist(ActionEvent event) {
 		try {
@@ -572,7 +648,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+	/**
+	 * Se encarga de crear la nueva lista.
+	 * @param event: ActionEvent cuando el usuario pulsa el botón.
+	 */
 	@FXML
 	void createPlaylist(ActionEvent event) {
 		if (yes.isSelected() && no.isSelected()) {
@@ -609,7 +688,10 @@ public class GUI_MP3 {
 			}
 		}
 	}
-
+/**
+ * Muestra la lista de canciones o la lista de videos del usuario.
+ * @param event:MouseEvent cuando el usuario da click en una lista de reproduccion.
+ */
 	@FXML
 	void showContent(MouseEvent event) {
 		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
@@ -652,7 +734,10 @@ public class GUI_MP3 {
 			}
 		}
 	}
-
+/**
+ * Reproduce un video.
+ * @param event:MouseEvent cuando el usuario da click en un video.
+ */
 	@FXML
 	void openVideo(MouseEvent event) {
 		try {
@@ -671,7 +756,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-	
+	/**
+	 * Exporta los datos del usuario y de las playlists en excels
+	 * @param event:ActionEvent cuando el usuario clickea el botón.
+	 */
 	 @FXML
 	    void exportData(ActionEvent event) {
 		 
@@ -689,12 +777,17 @@ public class GUI_MP3 {
 	    }
 	
 	
-
+/**
+ * Le pide al usuario el nombre de los archivos a exportar.
+ * @param event:ActionEvent cuando el usuario da click en el botón.
+ */
 	@FXML
 	void exportUserView(ActionEvent event) {
 		initFXMLToExportData();
 	}
-	
+	/**
+	 * Metodo que exporta los archivos.
+	 */
 	private void initFXMLToExportData() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportData.fxml"));
@@ -719,7 +812,10 @@ public class GUI_MP3 {
 		}
 	}
 
-
+/**
+ * carga la pantalla para importar un archivo con información de usuarios.
+ * @param event:ActionEvent cuando el usuario da click en el botón
+ */
 	@FXML
 	void importUserView(ActionEvent event) {
 		try {
@@ -744,7 +840,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+	/**
+	 * Importa un archivo con información de usuarios.
+	 * @param event:ActionEvent cuando el usuario da click en el botón
+	 */
 	@FXML
 	void importData(ActionEvent event) {
 		String fileName = txtNameFileToImport.getText();
@@ -757,7 +856,10 @@ public class GUI_MP3 {
 			e.printStackTrace();
 		}
 	}
-
+/**
+ * Carga la pantalla de animación de un eclipse.
+ * @param event:ActionEvent cuando el usuario da click en el botón
+ */
 	@FXML
 	void eclipse(ActionEvent event) {
 		try {
@@ -782,7 +884,10 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't open the next window, verify your configuration please").showAndWait();
 		}
 	}
-
+	/**
+	 * Realiza el eclipse.
+	 * @param event:ActionEvent cuando el usuario da click en el botón
+	 */
 	@FXML
 	public void move(ActionEvent event) {
 		go = true;
@@ -810,18 +915,26 @@ public class GUI_MP3 {
 			}.start();
 		}
 	}
-
+	/**
+	 * Detiene el eclipse.
+	 * @param event:ActionEvent cuando el usuario da click en el botón
+	 */
 	@FXML
 	void stop(ActionEvent event) {
 		go = false;
 	}
-
+  /**
+   * Actualiza la ubicación de la luna.
+   * @param x:double ubicación de la luna.
+   */
 	public void updateMoon(double x) {
 		if(go) {
 			moon.setLayoutX(x);
 		}
 	}
-
+   /**
+    * Ejecuta todo el eclipse; está basado en el último seguimiento que hicimos.
+    */
 	public void changes() {
 		if((moon.getLayoutX() >= 162 &&  moon.getLayoutX() < 182)|| (moon.getLayoutX() >= 330 &&  moon.getLayoutX() < 341)) {	
 			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#48D1CC"), null, null)));
@@ -844,6 +957,9 @@ public class GUI_MP3 {
 			hidePlanetsAndStars();
 		}
 	}
+	/**
+	 * Creamos el cielo estrellado con planetas
+	 */
 	public void makePlanetsAndStars() {
 		mars.setVisible(true);
 		venus.setVisible(true);
@@ -873,7 +989,9 @@ public class GUI_MP3 {
 		star12.setVisible(true);
 		star12.setFill(Color.color(Math.random(), Math.random(), Math.random()));
 	}
-
+/**
+ * Emulamos que se acaba el eclipse.
+ */
 	public void hidePlanetsAndStars() {
 		mars.setVisible(false);
 		venus.setVisible(false);

@@ -18,11 +18,17 @@ public class Main extends Application {
 	public Main() {
 		
 	}
-	
+	/**
+	 * Crea y ejecuta el programa
+	 * @param args
+	 * @throws FileNotFoundException
+	 */
 	public static void main(String[] args) throws FileNotFoundException{
 		launch(args);		
 	}
-
+/**
+ * Inicializa el programa.
+ */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
