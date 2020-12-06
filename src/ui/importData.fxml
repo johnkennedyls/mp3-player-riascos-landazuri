@@ -11,31 +11,38 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="201.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <Label text="Export Data" BorderPane.alignment="CENTER">
+      <Label text="Import Data" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold Italic" size="24.0" />
          </font>
       </Label>
    </top>
    <left>
-      <Label text="Name file to export" BorderPane.alignment="CENTER" />
+      <Label text="Name file to import" BorderPane.alignment="CENTER" />
    </left>
    <center>
-      <TextField fx:id="txtNameFileToExport" prefHeight="26.0" prefWidth="475.0" BorderPane.alignment="CENTER" />
+      <TextField fx:id="txtNameFileToImport" prefHeight="26.0" prefWidth="475.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
             <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancel" GridPane.columnIndex="1" />
-            <Button mnemonicParsing="false" onAction="#exportData" text="Export" />
+            <Button mnemonicParsing="false" onAction="#importData" text="Import" />
          </children>
       </GridPane>
    </bottom>
+   <right>
+      <Label text="Only users" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Label>
+   </right>
 </BorderPane>

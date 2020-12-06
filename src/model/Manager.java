@@ -4,10 +4,11 @@ package model;
 import java.io.FileNotFoundException;
 
 import java.io.PrintWriter;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,23 +38,23 @@ public class Manager implements Serializable{
 
 	private final static String SAVE_PATH_FILE_USERS = "data/users.xd";
 
-	public Manager() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {	
+	public Manager() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, UserAlreadyExistsException {	
 		users = new ArrayList<>();
-//		users.add(new User("Julian", "julian@gmail.com","1234",123));
+//		addUser("Julian", "julian@gmail.com","1234",123);
 //		users.get(0).addPlaylist("Songs");
 //		users.get(0).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
 //		users.get(0).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
 //		users.get(0).addPlaylist("Videos", "MP4");
 //		users.get(0).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
 //		users.get(0).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
-//		users.add(new User("Juan Manuel", "seyerman@gmail.com","1234",456));
+//		addUser("Juan Manuel", "seyerman@gmail.com","1234",456);
 //		users.get(1).addPlaylist("Songs");
 //		users.get(1).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
 //		users.get(1).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
 //		users.get(1).addPlaylist("Videos", "MP4");
 //		users.get(1).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
 //		users.get(1).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
-//		users.add(new User("Gallo", "gallo@gmail.com","1234",789));
+//		addUser("Gallo", "gallo@gmail.com","1234",789);
 //		users.get(2).addPlaylist("Songs");
 //		users.get(2).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
 //		users.get(2).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
@@ -61,6 +62,10 @@ public class Manager implements Serializable{
 //		users.get(2).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
 //		users.get(2).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
 //		saveData();
+	}
+	
+	public Manager(String test) {
+		users = new ArrayList<>();
 	}
 
 	public String addUser(String na, String em, String pass, int id) throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -226,6 +231,47 @@ public class Manager implements Serializable{
 		return info;
 	}
 
+	public void exportPlayListsData(String fileName) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(fileName);	
+		for (int i = 0; i < users.get(userPosition(current)).getPlaylists().size(); i++) {
+			Playlist myPlaylist = users.get(userPosition(current)).getPlaylists().get(i);			
+			pw.println(myPlaylist.toString());
+		}
+		pw.close();
+	}
+
+	public void exportUsersData(String fileName) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(fileName);
+		pw.println("Name;ID;Email;Password");
+		for (int i = 0; i < users.size(); i++) {
+			User myUser = users.get(i);			
+			pw.println(myUser.toString());
+		}
+		pw.close();
+	}
+
+	public void importUsersData(String fileName) throws IOException, NumberFormatException, UserAlreadyExistsException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		br.readLine();
+		String line = br.readLine();
+		while(line!=null){
+			String[] parts = line.split(";");
+			addUser(parts[0],parts[2],parts[3],Integer.parseInt(parts[1]));	
+			line = br.readLine();
+		}
+		br.close();
+	}
+
+	public List<Playlist> playlistSearched(String name){
+		List<Playlist> newPlaylists = new ArrayList<>();
+		for (int i = 0; i < users.get(userPosition(current)).getPlaylists().size(); i++) {
+			if (users.get(userPosition(current)).getPlaylists().get(i).getName().contains(name)) {
+				newPlaylists.add(users.get(userPosition(current)).getPlaylists().get(i));
+			}
+		}
+		return newPlaylists;
+	}
+
 	public List<User> getUsers() {
 		return users;
 	}
@@ -237,43 +283,6 @@ public class Manager implements Serializable{
 	public void setSongPlaying(Song song) {
 		songPlaying = song;
 	}
-	
-	
-	
-	public String toStringUsers() {
-		String msg = "Users List: \n ";
-		for(User user : users) {
-			msg += user.toString();
-		}
-		return msg;
-	}
-
-	public String toStringPlaylists() {
-		String msg = "Playlists List: \n ";
-		for(Playlist playlist : users.get(current).getPlaylists()) {
-			msg += playlist.toString();
-		}
-		return msg;
-	}
-	
-	public void exportPlayListsData(String fileName) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(fileName);
-		for (int i = 0; i < users.get(current).getPlaylists().size(); i++) {
-			Playlist myPlaylist = users.get(current).getPlaylists().get(i);			
-			pw.println(myPlaylist.toString());
-		}
-		pw.close();
-	}
-	
-	public void exportUsersData(String fileName) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(fileName);
-		for (int i = 0; i < users.size(); i++) {
-			User myUser = users.get(i);			
-			pw.println(myUser.toString());
-		}
-		pw.close();
-	}
-	
 
 	public int getCurrent() {
 		return current;

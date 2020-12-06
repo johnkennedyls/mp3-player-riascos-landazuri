@@ -18,18 +18,12 @@ public class ManagerTest {
 
 	private Manager m;
 	
-	public void setupScenary1() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		m = new Manager();
-	}
-	
-	public void setupScenary2() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		m = new Manager();
-//		m.addPlaylist("MP3");
-//		m.addPlaylist("MP4", "MP4");
+	public void setupScenary1() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, UserAlreadyExistsException {
+		m = new Manager("Test");
 	}
 	
 	public void setupScenary3() throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		m = new Manager();
+		m = new Manager("Test");
 		m.addUser("Juan", "Juan@gmail.com", "1234", 1234);
 		m.addUser("Jose", "Jose@gmail.com", "1234", 4567);	
 		m.addUser("Pedro", "Pedro@gmail.com", "1234", 9874);
@@ -38,7 +32,7 @@ public class ManagerTest {
 	}
 	
 	public void setupScenary4() throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		m = new Manager();
+		m = new Manager("Test");
 		m.addUser("Juan", "Juan@gmail.com", "1234", 9874);
 		m.addUser("Jose", "Jose@gmail.com", "1234", 4567);	
 		m.addUser("Pedro", "Pedro@gmail.com", "1234", 1234);
@@ -47,32 +41,11 @@ public class ManagerTest {
 		m.addUser("Juan", "Juan@gmail.com", "1234", 9874);
 	}
 	
-//	@Test
-//	public void addPlaylistSongsTest() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-//		setupScenary1();
-//		m.addPlaylist("MP3");
-//		m.addPlaylist("MP4", "MP4");
-//		assertNotNull(m.getPlaylists().get(0));
-//		assertNotNull(m.getPlaylists().get(1));
-//	}
-//	
-//	@Test
-//	public void contentTest() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-//		setupScenary2();
-//		m.getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
-//		m.getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
-//		assertNotNull(m.getPlaylists().get(0).getFirstSong());
-//		assertNotNull(m.getPlaylists().get(0).getFirstSong().getNextSong());
-//	}
-	
 	@Test
 	public void addUserTest() throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		setupScenary1();
 		m.addUser("Juan", "Juan@gmail.com", "1234", 1234);
-		assertEquals(1, m.getUsers().size(), "Not added all");
-		for (int i = 0; i < m.getUsers().size(); i++) {
-			assertNotNull(m.getUsers().get(i));
-		}
+		assertEquals(1, m.getUsers().size(), "Not added ");
 	}
 	
 	@Test

@@ -21,7 +21,6 @@ public class Song implements Serializable{
 	private String album;
 	private String title;
 	private String path;
-	private boolean reproducing;
 	private Song nextSong;
 	private Song prevSong;
 	
@@ -32,7 +31,6 @@ public class Song implements Serializable{
 		artist = tag.getFirst(FieldKey.ARTIST);
 		album = tag.getFirst(FieldKey.ALBUM);
 		title = tag.getFirst(FieldKey.TITLE);
-		reproducing = false;
 	}
 	
 	public Song getNextSong() {
@@ -75,14 +73,6 @@ public class Song implements Serializable{
 		this.title = title;
 	}
 
-	public boolean isReproducing() {
-		return reproducing;
-	}
-
-	public void setReproducing(boolean reproducing) {
-		this.reproducing = reproducing;
-	}
-
 	public String getPath() {
 		return path;
 	}
@@ -93,8 +83,8 @@ public class Song implements Serializable{
 	
 	public String toString() {
 		String msg = "";
-		String separator = ", ";
-		msg = title + separator + artist + separator + album;
+		String separator = ";";
+		msg += title + separator + artist + separator + album + "\n";
 		return msg;
 	}
 	

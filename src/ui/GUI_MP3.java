@@ -2,9 +2,8 @@ package ui;
 
 import java.io.File;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.util.List;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -13,6 +12,7 @@ import org.jaudiotagger.tag.TagException;
 
 import exceptions.NotFoundException;
 import exceptions.UserAlreadyExistsException;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -35,21 +35,31 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Manager;
+import model.Moon;
 import model.Playlist;
 import model.Song;
 import model.Video;
+import thread.ExportThread;
+import thread.NewSearchThread;
+import thread.RemoveThread;
 
 public class GUI_MP3 {
 
@@ -86,9 +96,6 @@ public class GUI_MP3 {
 	private Slider seekSlider;
 
 	@FXML
-	private BorderPane mainPane;
-
-	@FXML
 	private BorderPane userView;
 
 	@FXML
@@ -102,6 +109,9 @@ public class GUI_MP3 {
 
 	@FXML
 	private Label finalDuration;
+
+	@FXML
+	private Label numPlaylists;
 
 	@FXML
 	private Button btnCancel;
@@ -123,6 +133,15 @@ public class GUI_MP3 {
 
 	@FXML
 	private TextField txtPlaylistName;
+
+	@FXML
+	private TextField txtNameFileToExport;
+
+	@FXML
+	private TextField txtNameFileToImport;
+
+	@FXML
+	private TextField txtPlaylistSearcher;
 
 	@FXML
 	private TableView<Playlist> tvPlaylistsGroup;
@@ -159,17 +178,75 @@ public class GUI_MP3 {
 
 	@FXML
 	private TableColumn<Video, String> tcDurationV;
-	
-	@FXML
-    private TextField txtNameFileToExport;
 
-   
+	@FXML
+	private AnchorPane moon;
+
+	@FXML
+	private Pane mainPane;
+
+	private Moon m;
+
+	@FXML
+	private Circle mars;
+
+	@FXML
+	private Circle venus;
+
+	@FXML
+	private Circle jupiter;
+
+	@FXML
+	private Circle star1;
+
+	@FXML
+	private Circle star2;
+
+	@FXML
+	private Circle star3;
+
+	@FXML
+	private Circle star4;
+
+	@FXML
+	private Circle star5;
+
+	@FXML
+	private Circle star6;
+
+	@FXML
+	private Circle star7;
+
+	@FXML
+	private Circle star8;
+
+	@FXML
+	private Circle star9;
+
+	@FXML
+	private Circle star10;
+
+	@FXML
+	private Circle star11;
+
+	@FXML
+	private Circle star12;
+
+	private boolean go;
 
 	public void initialize() {
 	}
 
-	private void initializePlaylistsGroupView() {
+	public void initializePlaylistsGroupView() {
 		ObservableList<Playlist> observableList = FXCollections.observableArrayList(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getPlaylists());
+		tvPlaylistsGroup.setItems(observableList);
+		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
+		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content"));
+		numPlaylists.setText(manager.getUsers().get(manager.getCurrent()).getNumPlaylists() + "");
+	}
+
+	public void initializePlaylistsGroupView(List<Playlist> searched) {
+		ObservableList<Playlist> observableList = FXCollections.observableArrayList(searched);
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
 		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content")); 
@@ -417,12 +494,21 @@ public class GUI_MP3 {
 
 	@FXML
 	void removePlaylist(ActionEvent event) {
-
+		temp = tvPlaylistsGroup.getSelectionModel().getSelectedItem();
+		RemoveThread rt = new RemoveThread(manager, this, temp);
+		rt.start();
+		try {
+			manager.saveData();
+		} catch (IOException e) {
+			new Alert(Alert.AlertType.ERROR,"Can't save the data").showAndWait();
+		}
 	}
 
 	@FXML
-	void searchPlaylist(InputMethodEvent event) {
-
+	void searchPlaylist(KeyEvent event) {
+		String searched = txtPlaylistSearcher.getText();
+		NewSearchThread nst = new NewSearchThread(manager, this, searched);
+		nst.start();
 	}
 
 	private void addMedia(Playlist selected) {
@@ -585,51 +671,214 @@ public class GUI_MP3 {
 			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
 		}
 	}
-	
-	 @FXML
-	    void exportData(ActionEvent event) {
-		 
-		 String fileName = txtNameFileToExport.getText();
-			try {
-				manager.exportPlayListsData(fileName + "PlayLists.csv");
-				manager.exportUsersData(fileName+"Users.csv");
-				new Alert(Alert.AlertType.INFORMATION,"Playlists and users exported").showAndWait();
-			} catch (FileNotFoundException e) {
-				new Alert(Alert.AlertType.ERROR,"Can't export data, verify your configuration please").showAndWait();
-				e.printStackTrace();
-			}
-			
-		    
-	    }
-	 
-	  @FXML
-	    void exportUserView(ActionEvent event) {
-		  initFXMLToExportData();
-	    }
+
+	@FXML
+	void exportData(ActionEvent event) {
+		String fileName = txtNameFileToExport.getText();
+		ExportThread et = new ExportThread(manager, fileName);
+		et.start();
+	}
+
+	@FXML
+	void exportUserView(ActionEvent event) {
+		initFXMLToExportData();
+	}
 
 	private void initFXMLToExportData() {
-		 try {
-				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportData.fxml"));
-				fxmlLoader.setController(this);
-				Parent root = fxmlLoader.load();
-				Stage mainStage = new Stage();
-				mainStage.initModality(Modality.APPLICATION_MODAL);
-				Scene scene = new Scene(root);
-				mainStage.setScene(scene);
-				mainStage.setTitle("Give me fle name to export :v");
-				mainStage.show();
-				btnCancel.setOnAction(
-						new EventHandler<ActionEvent>() {
-							@Override
-							public void handle(ActionEvent event) {
-								mainStage.close();
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("exportData.fxml"));
+			fxmlLoader.setController(this);
+			Parent root = fxmlLoader.load();
+			Stage mainStage = new Stage();
+			mainStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(root);
+			mainStage.setScene(scene);
+			mainStage.setTitle("Export");
+			mainStage.show();
+			btnCancel.setOnAction(
+					new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent event) {
+							mainStage.close();
+						}
+					});	
+
+		} catch (IOException e) {
+			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
+		}
+	}
+
+
+	@FXML
+	void importUserView(ActionEvent event) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("importData.fxml"));
+			fxmlLoader.setController(this);
+			Parent root = fxmlLoader.load();
+			Stage mainStage = new Stage();
+			mainStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(root);
+			mainStage.setScene(scene);
+			mainStage.setTitle("Import");
+			mainStage.show();
+			btnCancel.setOnAction(
+					new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent event) {
+							mainStage.close();
+						}
+					});	
+
+		} catch (IOException e) {
+			new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
+		}
+	}
+
+	@FXML
+	void importData(ActionEvent event) {
+		String fileName = txtNameFileToImport.getText();
+		try {
+			manager.importUsersData("data/" +fileName+"Users.csv");
+			manager.saveData();
+			new Alert(Alert.AlertType.INFORMATION,"Users imported").showAndWait();
+		} catch (NumberFormatException | IOException | UserAlreadyExistsException | CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+			new Alert(Alert.AlertType.ERROR,"Can't import data, verify your configuration please").showAndWait();
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void eclipse(ActionEvent event) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("eclipsing.fxml"));
+			fxmlLoader.setController(this);
+			Parent root;
+			root = fxmlLoader.load();
+			Stage mainStage = new Stage();
+			mainStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(root);
+			mainStage.setScene(scene);
+			mainStage.setTitle("Eclipse");
+			mainStage.show();
+			btnCancel.setOnAction(
+					new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent event) {
+							mainStage.close();
+						}
+					});	
+		} catch (IOException e) {
+			new Alert(Alert.AlertType.ERROR,"Can't open the next window, verify your configuration please").showAndWait();
+		}
+	}
+
+	@FXML
+	public void move(ActionEvent event) {
+		go = true;
+		if(go) {
+			m = new Moon(moon.getLayoutX(), 96);
+			m.setMax(currentStage.getWidth());
+			new Thread() {
+				public void run() {
+					while(go) {
+						m.move();
+						changes();
+						Platform.runLater(new Thread() {
+							public void run() {
+								updateMoon(m.getX());
 							}
-						});	
-				
-			} catch (IOException e) {
-				new Alert(Alert.AlertType.ERROR,"Can't load the next window, verify your configuration please").showAndWait();
-			}
-		
+						});
+
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+		}
+	}
+
+	@FXML
+	void stop(ActionEvent event) {
+		go = false;
+	}
+
+	public void updateMoon(double x) {
+		if(go) {
+			moon.setLayoutX(x);
+		}
+	}
+
+	public void changes() {
+		if((moon.getLayoutX() >= 162 &&  moon.getLayoutX() < 182)|| (moon.getLayoutX() >= 330 &&  moon.getLayoutX() < 341)) {	
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#48D1CC"), null, null)));
+		}
+		else if((moon.getLayoutX() >= 182 &&  moon.getLayoutX() < 202)||(moon.getLayoutX() >= 310 &&  moon.getLayoutX() < 330)) {	
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#BEBEBE"), null, null)));
+		}else if((moon.getLayoutX() >= 202 &&  moon.getLayoutX() < 220)||(moon.getLayoutX() >= 290 &&  moon.getLayoutX() < 310)) {	
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#191970"), null, null)));
+		}else if((moon.getLayoutX() >= 220 &&  moon.getLayoutX() < 240)||(moon.getLayoutX() >= 270 &&  moon.getLayoutX() < 290)) {	
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#000080"), null, null)));
+		}else if(moon.getLayoutX() >= 240 &&  moon.getLayoutX() < 270) {	
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#000000"), null, null)));
+		}
+		else {
+			mainPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFF00" ), null, null)));
+		}
+		if(moon.getLayoutX() >= 162 &&  moon.getLayoutX() < 351) {
+			makePlanetsAndStars();
+		} else {
+			hidePlanetsAndStars();
+		}
+	}
+	public void makePlanetsAndStars() {
+		mars.setVisible(true);
+		venus.setVisible(true);
+		jupiter.setVisible(true);
+		star1.setVisible(true);
+		star1.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star2.setVisible(true);
+		star2.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star3.setVisible(true);
+		star3.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star4.setVisible(true);
+		star4.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star5.setVisible(true);
+		star5.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star6.setVisible(true);
+		star6.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star7.setVisible(true);
+		star7.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star8.setVisible(true);
+		star8.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star9.setVisible(true);
+		star9.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star10.setVisible(true);
+		star10.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star11.setVisible(true);
+		star11.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+		star12.setVisible(true);
+		star12.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+	}
+
+	public void hidePlanetsAndStars() {
+		mars.setVisible(false);
+		venus.setVisible(false);
+		jupiter.setVisible(false);
+		star1.setVisible(false);
+		star2.setVisible(false);
+		star3.setVisible(false);
+		star4.setVisible(false);
+		star5.setVisible(false);
+		star6.setVisible(false);
+		star7.setVisible(false);
+		star8.setVisible(false);
+		star9.setVisible(false);
+		star10.setVisible(false);
+		star11.setVisible(false);
+		star12.setVisible(false);
 	}
 
 }

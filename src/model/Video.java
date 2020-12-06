@@ -79,8 +79,8 @@ public class Video implements Serializable{
 	
 	public String toString() {
 		String msg = "";
-		String separator = ", ";
-		msg = name + separator + size;
+		String separator = ";";
+		msg += name + separator + size + "\n";
 		return msg;
 	}
 
