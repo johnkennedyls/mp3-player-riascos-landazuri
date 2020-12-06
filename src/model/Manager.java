@@ -43,7 +43,7 @@ public class Manager implements Serializable{
 	 * Inicializa un nuevo manager
 	 * @param test
 	 */
-	public Manager(String test) {
+	public Manager() {
 		users = new ArrayList<>();
 	}
 	/**
