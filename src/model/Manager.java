@@ -4,10 +4,11 @@ package model;
 import java.io.FileNotFoundException;
 
 import java.io.PrintWriter;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -271,6 +272,22 @@ public class Manager implements Serializable{
 		}
 		pw.close();
 	}
+	
+	 /*
+	  * public void importUsersData(String fileName) throws IOException{
+	  *  BufferedReader br = new BufferedReader(new FileReader(fileName));
+		    String line = br.readLine();
+		    while(line!=null){
+		      String[] parts = line.split(";");
+		      addContact(parts[0],parts[1]);
+		      line = br.readLine();
+		       br.close();
+		    }
+		    }
+	  */
+		   
+		   
+		  
 	
 
 }

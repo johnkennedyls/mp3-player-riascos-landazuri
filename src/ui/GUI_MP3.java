@@ -585,8 +585,8 @@ public class GUI_MP3 {
 		 
 		 String fileName = txtNameFileToExport.getText();
 			try {
-				manager.exportPlayListsData(fileName + "PlayLists.csv");
-				manager.exportUsersData(fileName+"Users.csv");
+				manager.exportPlayListsData("data/"+fileName + "PlayLists.csv");
+				manager.exportUsersData("data/"+fileName+"Users.csv");
 				new Alert(Alert.AlertType.INFORMATION,"Playlists and users exported").showAndWait();
 			} catch (FileNotFoundException e) {
 				new Alert(Alert.AlertType.ERROR,"Can't export data, verify your configuration please").showAndWait();

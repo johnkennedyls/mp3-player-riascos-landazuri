@@ -26,7 +26,15 @@ public class Song implements Serializable{
 	private boolean reproducing;
 	private Song nextSong;
 	private Song prevSong;
-	
+	/**
+	 * Representa una canción
+	 * @param path:String ruta de la canción.
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
 	public Song(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		media = new Media(new File(path).toURI().toString());
 		AudioFile f = AudioFileIO.read(new File(path));
@@ -92,7 +100,10 @@ public class Song implements Serializable{
 	public void setReproducing(boolean reproducing) {
 		this.reproducing = reproducing;
 	}
-	
+	/**
+	 * Representa el estado del objeto song
+	 * @return msg:estado del objeto song
+	 */
 	public String toString() {
 		String msg = "";
 		String separator = ", ";
