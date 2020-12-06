@@ -65,6 +65,7 @@ public class Playlist implements Serializable{
 	 * @param current: canción actual.
 	 * @param newSong: nueva canción.
 	 */
+
 	private void recursiveAddSong(Song current, Song newSong) {
 		if (current.getNextSong() != null) {
 			recursiveAddSong(current.getNextSong(), newSong);
@@ -99,6 +100,8 @@ public class Playlist implements Serializable{
 	 * @param current: video actual.
 	 * @param newSong: nuevo video.
 	 */
+
+
 	private void recursiveAddVideo(Video current, Video newVideo) {
 		if (current.getNextVideo() != null) {
 			recursiveAddVideo(current.getNextVideo(), newVideo);
@@ -249,19 +252,19 @@ public class Playlist implements Serializable{
 			video = video.getNextVideo();
 		}
 	}
-	
+
 	public Song getFirstSong() {
 		return firstSong;
 	}
-	
+
 	public void setFirstSong(Song fs) {
 		firstSong = fs;
 	}
-	
+
 	public Video getFirstVideo() {
 		return firstVideo;
 	}
-	
+
 	public void setFirstVideo(Video fv) {
 		firstVideo = fv;
 	}
@@ -281,11 +284,11 @@ public class Playlist implements Serializable{
 	public int getIdUser() {
 		return idUser;
 	}
-	
+
 	public List<Video> getPlaylistV() {
 		return playlistV;
 	}
-	
+
 	public List<Song> getPlaylist() {
 		return playlist;
 	}
@@ -299,38 +302,50 @@ public class Playlist implements Serializable{
 	 * return msg:String estado de la lista.
 	 */
 	public String toString() {
-		String msg = "PlayList " + name + ": \n";
-		if(content == "") {
-			msg += toStringSongs();
+		String msg = "PlayList " + name + "\n";
+		if(content.equals("MP3")) {
+			msg += toStringSongs() + "\n";
 		}else {
 			msg += toStringVideos();
 		}
 		return msg;
 	}
+
 	/**
 	 * Retorna el estado de las cancioneso.
 	 * return msg:String estado de las canciones.
 	 */
+
+
+
 	public String toStringSongs() {
-		String msg = "Song List: \n";
-		for(Song song : playlist) {
-			msg += song.toString();
+		String msg = "";
+		String separator = ";";
+		msg += "Title" + separator + "Artist" + separator + "Album\n";
+		if (playlist != null) {
+			for(Song song : playlist) {
+				msg += song.toString();
+			}
 		}
 		return msg;
 	}
+
 	/**
 	 * Retorna el estado de los videos.
 	 * return msg:String estado de los videos.
 	 */
+
+
 	public String toStringVideos() {
-		String msg = "Video List: \n";
-		for(Video video : playlistV) {
-			msg += video.toString();
+		String msg = "";
+		String separator = ";";
+		msg += "Title" + separator + "Size\n";
+		if (playlistV != null) {
+			for(Video video : playlistV) {
+				msg += video.toString();
+			}
 		}
-	
 		return msg;
 	}
-
-	
 
 }

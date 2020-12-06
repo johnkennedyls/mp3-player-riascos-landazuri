@@ -14,16 +14,13 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
-import javafx.scene.media.Media;
-
 public class Song implements Serializable{
 
 	private static final long serialVersionUID = 1;
-	private Media media;
 	private String artist;
 	private String album;
 	private String title;
-	private boolean reproducing;
+	private String path;
 	private Song nextSong;
 	private Song prevSong;
 	/**
@@ -35,24 +32,17 @@ public class Song implements Serializable{
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public Song(String path) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		media = new Media(new File(path).toURI().toString());
-		AudioFile f = AudioFileIO.read(new File(path));
+	
+	
+	public Song(String pathF) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		setPath(pathF);
+		AudioFile f = AudioFileIO.read(new File(pathF));
 		Tag tag = f.getTag();
 		artist = tag.getFirst(FieldKey.ARTIST);
 		album = tag.getFirst(FieldKey.ALBUM);
 		title = tag.getFirst(FieldKey.TITLE);
-		reproducing = false;
 	}
 	
-	public Media getMedia() {
-		return media;
-	}
-
-	public void setMedia(Media media) {
-		this.media = media;
-	}
-
 	public Song getNextSong() {
 		return nextSong;
 	}
@@ -93,12 +83,12 @@ public class Song implements Serializable{
 		this.title = title;
 	}
 
-	public boolean isReproducing() {
-		return reproducing;
+	public String getPath() {
+		return path;
 	}
 
-	public void setReproducing(boolean reproducing) {
-		this.reproducing = reproducing;
+	public void setPath(String path) {
+		this.path = path;
 	}
 	/**
 	 * Representa el estado del objeto song
@@ -106,8 +96,8 @@ public class Song implements Serializable{
 	 */
 	public String toString() {
 		String msg = "";
-		String separator = ", ";
-		msg = title + separator + artist + separator + album;
+		String separator = ";";
+		msg += title + separator + artist + separator + album + "\n";
 		return msg;
 	}
 	
