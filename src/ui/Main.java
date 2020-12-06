@@ -20,10 +20,9 @@ public class Main extends Application {
 	}
 	/**
 	 * Crea y ejecuta el programa
-	 * @param args
-	 * @throws FileNotFoundException
+	 * @param args x
 	 */
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) {
 		launch(args);		
 	}
 /**

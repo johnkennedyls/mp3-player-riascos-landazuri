@@ -42,8 +42,14 @@ public class Manager implements Serializable{
 	/**
 	 * Inicializa un nuevo manager
 	 * @param test
+	 * @throws InvalidAudioFrameException 
+	 * @throws ReadOnlyFileException 
+	 * @throws TagException 
+	 * @throws IOException 
+	 * @throws CannotReadException 
+	 * @throws UserAlreadyExistsException 
 	 */
-	public Manager() {
+	public Manager() throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		users = new ArrayList<>();
 	}
 	/**
