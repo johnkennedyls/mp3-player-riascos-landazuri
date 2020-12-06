@@ -37,37 +37,12 @@ public class Manager implements Serializable{
 	private int current;
 
 	private final static String SAVE_PATH_FILE_USERS = "data/users.xd";
+	private final static String SAVE_PATH_FILE_USERS_TEST = "data/usersTest.xd";
 
-	public Manager() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, UserAlreadyExistsException {	
+	public Manager() {	
 		users = new ArrayList<>();
-//		addUser("Julian", "julian@gmail.com","1234",123);
-//		users.get(0).addPlaylist("Songs");
-//		users.get(0).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
-//		users.get(0).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
-//		users.get(0).addPlaylist("Videos", "MP4");
-//		users.get(0).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
-//		users.get(0).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
-//		addUser("Juan Manuel", "seyerman@gmail.com","1234",456);
-//		users.get(1).addPlaylist("Songs");
-//		users.get(1).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
-//		users.get(1).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
-//		users.get(1).addPlaylist("Videos", "MP4");
-//		users.get(1).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
-//		users.get(1).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
-//		addUser("Gallo", "gallo@gmail.com","1234",789);
-//		users.get(2).addPlaylist("Songs");
-//		users.get(2).getPlaylists().get(0).addSong("multimedia/3 Doors Down - Here Without You.mp3");
-//		users.get(2).getPlaylists().get(0).addSong("multimedia/505 lyrics - Arctic Monkeys.mp3");
-//		users.get(2).addPlaylist("Videos", "MP4");
-//		users.get(2).getPlaylists().get(1).addVideo("multimedia/11440017.MP4");
-//		users.get(2).getPlaylists().get(1).addVideo("multimedia/11450004.MP4");
-//		saveData();
 	}
 	
-	public Manager(String test) {
-		users = new ArrayList<>();
-	}
-
 	public String addUser(String na, String em, String pass, int id) throws UserAlreadyExistsException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		String info = "";
 		if (users.isEmpty()) {
@@ -160,7 +135,7 @@ public class Manager implements Serializable{
 			clon.add(users.get(i));
 		}
 
-		users = burbleSort(users); 
+		users = bubbleSort(users); 
 
 		while(start <= end && !found ) {	
 			middle = ( start + end ) / 2;
@@ -178,7 +153,7 @@ public class Manager implements Serializable{
 		return middle;
 	}
 
-	public List<User> burbleSort(List<User> users) {
+	public List<User> bubbleSort(List<User> users) {
 		User current;
 		List<User> sorted;
 		for(int i = 2; i < users.size(); i++){
@@ -210,10 +185,36 @@ public class Manager implements Serializable{
 		oos.writeObject(users);
 		oos.close();
 	}
+	
+	public void saveDataTest() throws IOException{
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_PATH_FILE_USERS_TEST));
+		oos.writeObject(users);
+		oos.close();
+	}
 
 	@SuppressWarnings("unchecked")
 	public String loadData() throws IOException, ClassNotFoundException, NotFoundException{
 		File u = new File(SAVE_PATH_FILE_USERS);
+		String info = "";
+		boolean loaded = false;
+		if(u.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(u));
+			users = (List<User>)ois.readObject();
+			ois.close();	
+			loaded = true;
+		}
+		else {
+			throw new NotFoundException();
+		}
+		if (!loaded) {
+			info += "Nothing to load";
+		}
+		return info;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String loadDataTest() throws IOException, ClassNotFoundException, NotFoundException{
+		File u = new File(SAVE_PATH_FILE_USERS_TEST);
 		String info = "";
 		boolean loaded = false;
 		if(u.exists()){

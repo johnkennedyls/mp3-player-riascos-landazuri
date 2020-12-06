@@ -33,12 +33,18 @@ public class MP4Controller implements Initializable {
 	@FXML
 	private Slider seekSlider;
 
-
+	/**
+	 * This method is the constructor of MP4Controller
+	 * @param filePath is the path of the video to reproduce
+	 */
 	public MP4Controller(String filePath) {
 		Media media = new Media(filePath);
 		mediaPlayer = new MediaPlayer(media);
 	}
 	
+	/**
+	 * This method initialize the mediaPlayer, configures the window dimensions, volume and slider
+	 */
 	private void components() {
 		mediaView.setMediaPlayer(mediaPlayer);
 		DoubleProperty width = mediaView.fitWidthProperty();
@@ -78,11 +84,19 @@ public class MP4Controller implements Initializable {
 		});
 	}
 
+	/**
+	 * This method pauses the video
+	 * @param event
+	 */
 	@FXML
 	private void pauseVideo(ActionEvent event) {
 		mediaPlayer.pause();
 	}
 
+	/**
+	 * This method resume the video
+	 * @param event
+	 */
 	@FXML
 	private void playVideo(ActionEvent event) {
 		components();
@@ -90,26 +104,46 @@ public class MP4Controller implements Initializable {
 		mediaPlayer.setRate(1);
 	}
 
+	/**
+	 * This method stops the video
+	 * @param event
+	 */
 	@FXML
 	private void stopVideo(ActionEvent event) {
 		mediaPlayer.stop();
 	}
 
+	/**
+	 * This method makes the video goes more fast
+	 * @param event
+	 */
 	@FXML
 	private void fastVideo(ActionEvent event) {
 		mediaPlayer.setRate(1.5);
 	}
 
+	/**
+	 * This method makes the video goes faster
+	 * @param event
+	 */
 	@FXML
 	private void fasterVideo(ActionEvent event) {
 		mediaPlayer.setRate(2);
 	}
 
+	/**
+	 * This method makes the video goes slow
+	 * @param event
+	 */
 	@FXML
 	private void slowVideo(ActionEvent event) {
 		mediaPlayer.setRate(.75);
 	}
 
+	/**
+	 * This method makes the video goes slower
+	 * @param event
+	 */
 	@FXML
 	private void slowerVideo(ActionEvent event) {
 		mediaPlayer.setRate(.50);

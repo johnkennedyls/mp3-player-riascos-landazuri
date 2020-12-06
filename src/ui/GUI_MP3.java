@@ -165,9 +165,6 @@ public class GUI_MP3 {
 	private TableColumn<Song, String> tcAlbum;
 
 	@FXML
-	private TableColumn<Song, String> tcDuration;
-
-	@FXML
 	private TableView<Video> tvVideo;
 
 	@FXML
@@ -175,9 +172,6 @@ public class GUI_MP3 {
 
 	@FXML
 	private TableColumn<Video, String> tcSize;
-
-	@FXML
-	private TableColumn<Video, String> tcDurationV;
 
 	@FXML
 	private AnchorPane moon;
@@ -242,7 +236,7 @@ public class GUI_MP3 {
 		tvPlaylistsGroup.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name")); 
 		tcContent.setCellValueFactory(new PropertyValueFactory<Playlist,String>("content"));
-		numPlaylists.setText(manager.getUsers().get(manager.getCurrent()).getNumPlaylists() + "");
+		numPlaylists.setText(manager.getUsers().get(manager.userPosition(manager.getCurrent())).getNumPlaylists() + "");
 	}
 
 	public void initializePlaylistsGroupView(List<Playlist> searched) {

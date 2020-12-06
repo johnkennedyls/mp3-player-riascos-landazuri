@@ -11,12 +11,20 @@ public class ExportThread extends Thread{
 	private Manager m;
 	private String fileName;
 	
+	/**
+	 * This is the constructor of ExportThread
+	 * @param manager is the controller class
+	 * @param s is the file name of the file to export
+	 */
 	public ExportThread(Manager manager, String s) {
 		setDaemon(true);
 		m = manager;
 		fileName = s;
 	}
 
+	/**
+	 * This method is the action of the thread. This thread exports users and playlists data.
+	 */
 	public void run() {
 		Platform.runLater(new Thread() {
 			public void run() {

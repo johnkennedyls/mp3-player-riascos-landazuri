@@ -3,10 +3,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
-<TableView fx:id="tvVideo" onMouseClicked="#openVideo" prefHeight="319.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<TableView fx:id="tvVideo" onMouseClicked="#openVideo" prefHeight="319.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <columns>
       <TableColumn fx:id="tcTitleV" prefWidth="344.8000602722168" text="Title" />
       <TableColumn fx:id="tcSize" minWidth="0.0" prefWidth="85.60003662109375" text="Size" />
-      <TableColumn fx:id="tcDurationV" prefWidth="76.79998779296875" text="Duration" />
    </columns>
 </TableView>
